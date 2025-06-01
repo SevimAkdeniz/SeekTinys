@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <%-include('./inc/head.ejs')%>
+</head>
+<body>
+    <section id="login_main">
+
+        <div id="login_bg">
+            <div class="login_page">
+                <h1>Projemiz'e Giriş Yap</h1>
+
+                
+                <div id="login_form">
+                    <form action="/login" method="post">
+                        <input type="text"name = "email" placeholder="e-posta giriniz">
+                        <input type="password" name = "password" placeholder="şifrenizi giriniz">
+                        <button>Giriş yap</button>
+                       
+                        
+    
+                    </form>
+                </div>
+                <button>Şifremi unuttum </button>
+                
+                <p class="or-text">veya</p>
+                <p>Henüz bir hesabın yok mu?   <a href="/signup">  Kaydol</a></p>
+
+                
+            </div>
+        </div>
+       
+    </section>
+
+
+  
+      
+
+
+    
+</body>
+</html>

@@ -1,0 +1,74 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <h2>📋 Rezervasyonlarım</h2>
+
+    <% if (reservations.length===0) { %>
+        <p>Hiç rezervasyonunuz yok.</p>
+        <% } else { %>
+            <table border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Otel</th>
+                        <th>Giriş Tarihi</th>
+                        <th>Çıkış Tarihi</th>
+                        <th>Kişi</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reservations.forEach(res=> { %>
+                        <tr>
+                            <td>
+                                <%= res.Hotel?.name || "Otel bulunamadı" %>
+                            </td>
+                            <td>
+                                <%= res.start_date %>
+                            </td>
+                            <td>
+                                <%= res.end_date %>
+                            </td>
+                            <td>
+                                <%= res.guest_count %>
+                            </td>
+                          
+                            <td>
+                                <% if (res.status==='cancelled' ) { %>
+                                    <span style="color: red;">
+                                        <%= res.status %>
+                                    </span>
+                                    <% } else { %>
+                                        <span style="color: green;">
+                                            <%= res.status %>
+                                        </span>
+                                        <form method="POST" action="/kiraci/rezervasyon/iptal/<%= res.id %>"
+                                            onsubmit="return confirm('İptal edilsin mi?');">
+                                            <button type="submit">İptal Et</button>
+                                        </form>
+                                        <% } %>
+                            </td>
+
+
+
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+
+
+
+
+
+
+</body>
+
+</html>

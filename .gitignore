@@ -1,0 +1,13 @@
+# Node modules
+node_modules/
+
+# Env dosyası
+.env
+
+# Loglar
+*.log
+
+# IDE / Sistem dosyaları
+.DS_Store
+.vscode/
+Thumbs.db

@@ -1,0 +1,38 @@
+<html lang="en">
+<head>
+    <%-include('./inc/head.ejs')%>
+</head>
+<body>
+    
+    <section id="login_main">
+
+        <div id="login_bg">
+            <div id="signup_page" class="login_page">
+                <h1>Hesap Oluştur</h1>
+
+                <div id="signup_form">
+                    <form action="/signup" method="post">
+                        <input type="text" name = "username" placeholder="kullanıcı adınızı giriniz ">
+                        <input type="email" name ="email" placeholder="e-posta giriniz">
+                        <input type="password" name = "password" placeholder="şifrenizi giriniz">
+                        <div>
+                            <button type="submit" name="role" value="customer">Müşteri kaydı oluştur</button>
+                            <button type="submit" name="role" value="owner">Üye kaydı oluştur</button>
+                        
+        
+
+                        </div>
+                      
+                    </form>
+                </div>
+                    
+                <p class="or-text">veya</p>
+                <p>Zaten bir hesabın var mı?   <a href="/login"> Giriş yap</a></p>
+
+                
+            </div>
+        </div>
+       
+    </section>
+</body>
+</html>

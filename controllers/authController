@@ -1,0 +1,98 @@
+const jwt = require("jsonwebtoken");
+const User = require("../models/users"); // ✅ MySQL Modelini Kullan
+const bcrypt = require("bcryptjs");
+
+const maxAge = 60 * 60 * 24;
+const createToken = (id) => {
+    return jwt.sign({ id }, "gizli", { expiresIn: maxAge });
+};
+
+// Giriş Sayfasını Göster
+const auth_login = (req, res) => {
+    res.render("login");
+};
+
+// Kullanıcı Girişi İşlemi
+const auth_login_post = async (req, res) => {
+    const { email, password } = req.body;
+    if (email == "sevimakdeniz7@gmail.com" && password == "sev") {
+        res.redirect("/admin")
+
+
+    } else {
+        try {
+            // ✅ MySQL için Sequelize findOne kullanımı
+            const user = await User.findOne({ where: { email } });
+
+            if (!user) {
+                console.log("Kullanıcı bulunamadı");
+
+
+
+            }
+
+            // 📌 Şifre karşılaştırma (bcrypt ile)
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                console.log("Şifre yanlış");
+                return res.status(400).json({ message: "Şifre yanlış" });
+            }
+            // Başarılı girişte
+            req.session.user = {
+                id: user.id,
+                name: user.name,
+                role: user.role
+            };
+
+
+            // ✅ JWT Token oluştur
+            const token = createToken(user.id);
+            res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+            res.redirect("/");
+
+        } catch (e) {
+            console.log(e);
+            res.status(500).json({ message: "Sunucu hatası" });
+        }
+
+    }
+
+
+};
+
+// Kayıt Sayfasını Göster
+const auth_signup = (req, res) => {
+    res.render("signup");
+};
+
+// Kullanıcı Kaydı İşlemi
+const auth_signup_post = async (req, res) => {
+    try {
+        const { username, email, password, role } = req.body;
+
+        // 📌 Şifreyi hash'le
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // ✅ MySQL için kullanıcı oluşturma
+        const newUser = await User.create({
+            username,
+            email,
+            role,
+            password: hashedPassword,
+
+        });
+
+        res.redirect("/login");
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Kayıt işlemi başarısız" });
+    }
+};
+
+module.exports = {
+    auth_login,
+    auth_signup,
+    auth_signup_post,
+    auth_login_post,
+};

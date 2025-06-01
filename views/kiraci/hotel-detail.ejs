@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h2><%= hotel.name %></h2>
+<p><strong>Konum:</strong> <%= hotel.location %> | <strong>Merkeze uzaklık:</strong> <%= hotel.distance_to_center %> km</p>
+<p><strong>Fiyat:</strong> <%= hotel.price_per_night %> ₺ / gece</p>
+<p><strong>Puan:</strong> ⭐ <%= hotel.review_score || "Henüz yok" %></p>
+<p><strong>Yıldız:</strong> <%= hotel.star_rating || "-" %></p>
+<p><strong>Açıklama:</strong> <%= hotel.description %></p>
+
+<hr>
+
+<!-- 🖼️ Görseller -->
+<h4>Fotoğraflar</h4>
+<% if (hotel.hotel_images && hotel.hotel_images.length > 0) { %>
+  <div style="display: flex; gap: 10px;">
+    <% hotel.hotel_images.forEach(img => { %>
+      <img src="<%= img.image_path %>" alt="otel foto" width="200">
+    <% }) %>
+  </div>
+<% } else { %>
+  <p>📷 Görsel bulunamadı.</p>
+<% } %>
+
+<hr>
+
+<!-- 🧾 Ek Bilgiler -->
+<p><strong>Check-in:</strong> <%= hotel.check_in_time %> | <strong>Check-out:</strong> <%= hotel.check_out_time %></p>
+<p><strong>Maksimum Kişi:</strong> <%= hotel.max_guests %> | <strong>Oda:</strong> <%= hotel.room_count %></p>
+
+<!-- ✨ Vitrin özellikleri -->
+<% if (hotel.highlight_1 || hotel.highlight_2) { %>
+  <h4>Öne Çıkan Özellikler</h4>
+  <ul>
+    <% if (hotel.highlight_1) { %><li><%= hotel.highlight_1 %></li><% } %>
+    <% if (hotel.highlight_2) { %><li><%= hotel.highlight_2 %></li><% } %>
+  </ul>
+<% } %>
+
+<!-- ✅ Boolean Özellikler -->
+<h4>Olanaklar</h4>
+<ul>
+  <% for (const [key, label] of Object.entries(allFeatures)) { %>
+    <% if (hotel[key]) { %>
+      <li>✅ <%= label %></li>
+    <% } %>
+  <% } %>
+</ul>
+
+<!-- 🔘 Rezervasyon Butonu -->
+<form method="GET" action="/kiraci/rezervasyon/<%= hotel.id %>">
+  <button type="submit">Rezervasyon Yap</button>
+</form>
+    
+    
+</body>
+</html>

@@ -1,0 +1,744 @@
+    body{
+        padding: 0;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, Noto Sans, Apple Color Emoji, Segoe UI Emoji, sans-serif;
+        
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+
+    input{
+        border: none;
+        background-color: none;
+        color: black;
+    }
+    a{
+        text-decoration: none;
+        color: rgb(255, 255, 255);
+    }
+    p{
+        margin: 0;
+        padding: 0
+    }
+    nav p{
+        font-size: 1.5rem;
+    }
+    .left_nav a {
+        padding-right: 1REM;
+    }
+    nav a {
+        text-decoration: none;
+        color: white;
+    }
+    nav{
+        margin-bottom: 3rem;   
+        background-size: cover;      /* Resmi ekranı kaplayacak şekilde boyutlandırır */
+         /* Resmi ortalar */
+        background-repeat: no-repeat;
+        font-size: 1.3rem;
+        padding-top: 1rem;
+        
+        width: 100%;
+        background-color: rgb(28, 49, 108);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        box-shadow: 0 2px .75rem rgba(12, 14, 28, .08);
+        color: white;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.201); /* 👈 alt kenarlık */
+    }
+    .index_top div{
+        margin-top: 2rem;
+    }
+    #image{
+        box-shadow: 0px 5px 8px rgba(0, 26, 111, 0.789);
+        height: 60%;
+        width: 80%;
+        border-radius: 1rem;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+       
+        background-color: grey;
+        background-image: url("./images/ameland-5651866.jpg");
+        background-size: cover;      /* Resmi ekranı kaplayacak şekilde boyutlandırır */
+        background-position: center;     /* Resmi ortalar */
+        background-repeat: no-repeat;
+    }
+
+    .index_top{
+        display: flex;
+        flex-direction: column  ;
+   
+        width: 100%;
+    }
+
+
+    .index-hotels div h1{
+        padding: 3rem;
+    }
+
+#seach-bar{
+    margin: auto;
+    display: flex;
+    width: 80%; 
+    padding: 0 1rem;
+    padding-bottom: 1.5rem;
+    flex-direction: row;
+      border-radius: 5px;
+    justify-content: space-between  ;
+    box-shadow: 0 2px .75rem rgba(12, 14, 28, 0.381);
+    background-color: rgb(255, 255, 255);
+}
+    #search-bar{
+        
+        margin: auto;
+        display: flex;
+        width: 80%;
+        flex-direction: row;
+          border-radius: 5px;
+        justify-content: space-between  ;
+        padding: 1rem;
+        box-shadow: 0 2px .75rem rgba(12, 14, 28, 0.381);
+        background-color: rgb(255, 255, 255);
+    }
+    .search-item{
+        width: 20%;
+        padding: 0.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #000000;
+        margin: 0 0.3rem;
+        border-radius: 5px;
+        background-color: white;
+    }
+
+
+    .search-btn{
+        background-color: rgba(0, 119, 255, 0.712);
+        border: none    ;
+        padding: 1.5rem;
+        border-radius: 50%;
+        margin-left: 2rem;
+       
+    }
+    #text1{
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+
+    }
+    #text2{
+        font-size: 1rem;
+    }
+
+
+ 
+
+    #line{
+        padding: 1rem;
+        margin-bottom: 2rem;
+        width: 97%;
+        text-align: center;
+        color: rgb(255, 255, 255);
+        background-color: rgba(0, 26, 99, 0.578);
+    }
+
+
+    #cards{
+        
+        margin: auto;
+        background-color: rgb(255, 255, 255);
+        width: 80%;
+        height: 80%;
+        display: flex;
+        flex-direction: row ;
+        align-items: center;
+        justify-content: center;
+    }
+    .index-hotels{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column  ;
+    }
+
+    .cards {
+        border-radius: 20px;
+        width: 30%;
+        height: 95%;
+        background-color: rgb(255, 255, 255);
+        padding-bottom: 2.5rem;
+        margin: 1rem;
+        box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .img-part img{
+        border-radius: 5px;
+        max-width:100%;
+        height: 55%;
+        z-index: -1;
+    }
+    .name-part{
+        padding: 1rem;
+        display: flex;
+        flex-direction: column  ;
+        justify-content: start  ;
+    }
+    .name-part div{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 3rem;
+    }
+    .price-part{
+        margin : 0.5rem;  
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #848484;
+        border-radius: 20px;
+    
+    }   
+    .price{
+        font-weight: bold;
+        font-size: 30px;
+    }
+    .price-part div{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+    .price-part button{
+        width: 100%;
+        padding: 0.8rem;
+        margin-top: 1rem;
+        background-color: #00578b;
+        color: white;
+        border: none;
+        font-weight: bold;
+        border-radius: 10px;
+    }
+
+
+
+#hotels-main{
+   
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: rgb(233, 233, 233)
+}
+
+.hotels{
+    width: 65%;
+    height: 40%;
+  
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
+    overflow: hidden; 
+    background-color: white;
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.3);
+ 
+    
+
+}
+
+.hotels>div{
+    padding: 1rem;
+   
+ 
+
+}
+
+
+
+
+
+
+.image-hotels {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+   
+  }
+  
+
+.main-contant-hotels {
+    flex: 2;
+   
+    display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Dikeyde boşluğu eşit dağıtır */
+        height: 100%; /* Ya da sabit bir yükseklik: örneğin 200px */
+        padding: 10px;
+}
+
+
+.price-part-hotels {
+    flex: 1;
+    display: flex;
+  
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+#point{
+    display: flex;
+}
+
+#point div{
+  
+    border-radius: 50%;
+    width:35px;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+    text-align: center; 
+    color: white;
+    background-color: green ;
+    font-weight: bold;
+}
+.extra{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: green;
+}
+.extra p {
+    padding-left: 0.5rem;
+}
+#point>p{
+    margin-left: 0.7rem;
+}
+
+#price {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#price > div:first-child {
+    display: flex;
+    flex-direction: column;
+}
+
+#price p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+
+#price button {
+    padding: 0.5rem 0.8rem;
+    border: none;
+    border-radius: 5px;
+    background-color: green;
+    color: white;
+    font-weight: bold;
+}
+
+
+
+#priceBold{
+    font-weight: bold;
+font-size: 30px;
+}
+
+
+#search-barr{
+ 
+   
+    width: 100%;
+    height: 30%;
+    margin: auto ;
+    padding-top: 3rem;
+}
+
+
+
+#login_main
+{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(240, 240, 240);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+
+
+}
+
+
+#login_bg{
+    color: rgb(0, 0, 0);
+    background-color: #fbfcfc;
+    width: 500px;
+    height: 600px;
+    border-radius: 20px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    box-shadow: 2px 1px .8rem rgba(0, 0, 0, 0.664);
+    
+   
+    
+}
+
+#login_form{
+    margin-left: 3rem;
+    width: 100%;
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#login_form input{
+    color: rgb(0, 0, 0);
+    width: 90%;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: rgb(255, 255, 255);
+    border: 1px rgb(28, 49, 108) solid;
+    border-radius: 5px;
+    
+    
+}
+#login_form input::placeholder{
+    color: rgb(28, 49, 108);
+}
+#signup_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+ 
+}
+#signup_form{
+   
+    width: 100%;
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   
+}
+
+
+#signup_form input{
+    color: rgb(0, 0, 0);
+    width: 90%;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: rgb(255, 255, 255);
+    border: 1px rgb(28, 49, 108) solid;
+    border-radius: 5px;
+    
+    
+}
+#signup_form input::placeholder{
+    color: rgb(28, 49, 108);
+}
+
+
+#signup_form div{
+    margin-top: 2rem;
+}
+
+
+
+
+.login_page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#login_form button{
+    margin-top: 2rem;
+
+}
+.login_page button{
+    border: 1px #ffffff solid;
+    border-radius: 50px;
+    background-color: rgb(28, 49, 108);
+    width: 90%;
+    padding: 0.5rem;
+    font-weight: bolder;   
+    margin-bottom: 1rem;
+    font-size: 15px;
+    color: white;
+}
+.login_page p{
+    
+    font-size: 20px;
+    color: rgb(0, 76, 108);
+}
+
+.login_page h1{
+    font-size: 30px;
+    padding: 2rem 0;
+    color: rgb(28, 49, 108);
+ 
+}
+.or-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: white; /* Yazı rengi */
+    font-size: 15px;
+    width: 90%;
+   
+}
+
+.or-text::before,
+.or-text::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid rgb(75, 75, 75); /* Çizgi rengi */
+    margin: 0 10px; /* Yazıyla çizgi arasındaki boşluk */
+}
+
+#login_page p a {
+    margin-left: 10px; /* Kaydol'u sağa kaydır */
+}
+
+
+
+
+
+.forgot-password-main{
+    background-color: rgb(234, 234, 234);
+    width: 100%;
+    height: 100%;
+    color: rgb(28, 49, 108);
+ 
+    
+}
+.forgot-password{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   
+    
+}
+
+.forgot-password>div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    justify-content: center;
+    height: 50%;
+    width: 35%;
+    border-radius: 15px;
+    box-shadow: 2px 10px .8rem rgba(0, 0, 0, 0.44);
+
+}
+.forgot-password div{
+    margin: 1rem 0;
+}
+.forgot-password input{
+    padding: 0.5rem 1rem;
+    color: rgb(0, 34, 103);
+  
+    background-color: rgb(255, 255, 255);
+    border: 1px rgb(28, 49, 108) solid;
+    border-radius: 5px;
+    
+}
+.forgot-password input::placeholder{
+    color: #00578b;
+}
+.forgot-password button{
+    border: none;
+    padding: 0.5rem 1rem;
+    background-color: rgb(28, 49, 108) ;
+    color: white;
+    border-radius: 5px;
+    border: 1px rgb(0, 0, 0) solid;
+}
+
+
+#reset{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#reset form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; /* inputlar arası boşluk */
+    width: 100%;
+}
+
+
+#reset input {
+    width: 120%;
+}
+
+.add-hotel input{
+    border: 1px solid black;
+}
+
+
+.add-hotel-main{
+  
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.add-hotel{
+    width: 50%;
+    height: 80%;
+   
+    
+}
+
+
+#name-location > div:first-child {
+    display: flex;
+    gap: 10px; /* inputlar arası boşluk */
+  }
+  
+  #name-location input {
+    flex: 1;
+  }
+  
+  #name-location > div:last-child input {
+    width: 100%; /* açıklama inputu tam genişlik */
+    margin-top: 10px;
+  }
+
+
+  #name-location input{
+    padding: 1rem;
+  }
+  
+ 
+
+
+.int-section{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    
+}
+
+
+.int-section input{
+    margin: 1rem 0;
+    padding: 1rem;
+    width: 25%;
+    
+}
+
+
+#input2, #input3{
+    margin: 1rem 1rem;
+
+}
+
+
+.time-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+.time-section div{
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    background-color: white;
+    border:  1px solid black;
+    width: 100%;
+}
+.time-section input{
+    border: none;
+    
+}
+.time-section div:first-child{
+    margin-right: 2rem;
+}
+
+
+.check-section{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+height: 100%;
+}
+
+.check-section>div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 25%;
+    background-color: rgb(255, 255, 255);
+    margin: 1rem;
+}
+
+.check-div{
+    display: flex;
+    
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+   width: 100%;
+   height: 100% ;
+    margin: 0.2rem;
+    box-shadow: 0 2px .75rem rgba(12, 14, 28, 0.381);
+
+}
+
+
+.check-div i{
+    font-size: 4rem;
+}
+
+
+
+
+#add-hotel-text{
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2rem ;
+   
+   
+}
+
+
+
