@@ -13,6 +13,10 @@ const session = require("express-session");
 
 
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
+
+
 
 
 
@@ -41,7 +45,7 @@ app.use(session({
 
 app.use('/kiraci', kiraciHotelRoutes);
 app.use(authRoutes);
-app.use('/', hotelsRoute);
+app.use('/host', hotelsRoute);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -74,5 +78,5 @@ app.get("/admin", (req,res)=>{
 
 
 app.get("/add-hotel",(req,res)=>{
-    res.render("add-hotel")
+res.render("host/add-hotel");
 })

@@ -1,0 +1,56 @@
+<html lang="tr">
+
+<head>
+    <%- include('../inc/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../inc/nav.ejs') %>
+
+        <h2 style="text-align:center;">İlanlarım</h2>
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+            <% ilanlar.forEach(ilan=> { %>
+                <div style="border: 1px solid #ccc; padding: 16px; width: 300px; border-radius: 8px;">
+                    <% if (ilan.image_path) { %>
+                        <img src="/uploads/<%= ilan.image_path %>" alt="Tiny House"
+                            style="width: 100%; border-radius: 6px;">
+                        <% } else { %>
+                            <p>Görsel yok</p>
+                            <% } %>
+
+                                <h3>
+                                    <%= ilan.name %>
+                                </h3>
+                                <p><strong>Konum:</strong>
+                                    <%= ilan.location %>
+                                </p>
+                                <p><strong>Fiyat:</strong> ₺<%= ilan.price_per_night %>
+                                </p>
+                                <p><strong>Kapasite:</strong>
+                                    <%= ilan.max_guests %> kişi
+                                </p>
+                                <p><strong>Öne Çıkanlar:</strong>
+                                    <%= ilan.highlight_1 %>
+                                        <% if (ilan.highlight_2) { %> - <%= ilan.highlight_2 %>
+                                                <% } %>
+                                </p>
+                                <a href="/host/duzenle/<%= ilan.id %>">
+  <button>Düzenle</button>
+</a>
+
+
+                                <form action="/host/sil/<%= ilan.id %>" method="POST" style="margin-top: 10px;">
+                                    <button type="submit"
+                                        onclick="return confirm('Bu ilanı silmek istediğinize emin misiniz?')">Sil</button>
+                                        
+                                </form>
+                </div>
+
+
+
+                <% }) %>
+        </div>
+</body>
+
+</html>

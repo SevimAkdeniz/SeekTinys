@@ -1,86 +1,53 @@
-<html lang="en">
+<html lang="tr">
 <head>
-    <%-include('./inc/head.ejs')%>
-
+    <%- include('../inc/head.ejs') %>
 </head>
 <body>
+    <%- include('../inc/nav.ejs') %>
 
-    <%-include('./inc/nav.ejs')%>
-    <div id="add-hotel-text">
-
-        <h2>Otel ekleyin</h2>
-
+    <div id="add-house-text">
+        <h2>Tiny House Ekleyin</h2>
     </div>
-   
 
-    <div class="add-hotel-main">
-        
-        <div class="add-hotel">
-            <form action="/add", method="POST">
+    <div class="add-house-main">
+        <div class="add-house">
+            <form action="/host/add" method="POST" enctype="multipart/form-data">
                 <div class="input-section">
                     <div id="name-location">
-
-                        <div id="name">
-                               
-                            <input type="text" placeholder="otel ismi" name="name">                   
-                            <input type="text" placeholder="otel konumu" name="location">
-        
-                        </div>
-                        <div id="description">
-                            <input type="text" placeholder="kısa açıklama " name="description">
-        
-                        </div>
-
-
-
-
+                        <input type="text" placeholder="Tiny House adı" name="name" required>
+                        <input type="text" placeholder="Konum" name="location" required>
                     </div>
-
-
-                  
-
-                    
-    
-
+                    <div id="description">
+                        <input type="text" placeholder="Kısa açıklama" name="description" required>
+                    </div>
                 </div>
 
                 <div class="int-section">
-                    
-                    <input type="number" placeholder="Fiyat (tl)" name="price" step="0.1" min="0" max="10000">
-                    <input id="input2" type="number" placeholder="Uzaklık (km)" name="distance_to_center" step="0.1" min="0" max="10000">
-                    <input id="input3" type="number" placeholder="Kişi sayısı" name="max_guests" min="1" max="20" required>
-                    <input type="number" placeholder="Oda sayısı"name="room_count" min="1" max="100" required>
-
+                    <input type="number" placeholder="Fiyat (₺)" name="price" step="0.1" min="0" max="10000" required>
+                    <input id="input2" type="number" placeholder="Merkeze uzaklık (km)" name="distance_to_center" step="0.1" min="0" max="1000">
+                    <input id="input3" type="number" placeholder="Maks. kişi sayısı" name="max_guests" min="1" max="20" required>
+                    <input type="number" placeholder="Oda sayısı" name="room_count" min="1" max="10" required>
                 </div>
 
                 <div class="time-section">
                     <div>
                         <label>Giriş Saati:</label>
                         <input type="time" name="check_in_time" required>
-
                     </div>
-                  
-
-
                     <div>
                         <label>Çıkış Saati:</label>
-                        <input type="time" placeholder=""   name="check_out_time" required>
-
+                        <input type="time" name="check_out_time" required>
                     </div>
-        
-                
                 </div>
 
-
                 <div class="check-section">
-
                     <div>
                         <div class="check-div">
                             <i class="fa-solid fa-wifi"></i>
                             <label><input type="checkbox" name="has_wifi"> Wi-Fi</label>
                         </div>
                         <div class="check-div">
-                            <i class="fa-solid fa-square-parking"></i>  
+                            <i class="fa-solid fa-square-parking"></i>
                             <label><input type="checkbox" name="has_parking"> Otopark</label>
                         </div>
                         <div class="check-div">
@@ -89,14 +56,14 @@
                         </div>
                         <div class="check-div">
                             <i class="fa-solid fa-water-ladder"></i>
-                            <label><input type="checkbox" name="has_pool"> Havuz</label>                        </div>
+                            <label><input type="checkbox" name="has_pool"> Havuz</label>
+                        </div>
                         <div class="check-div">
                             <i class="fa-solid fa-spa"></i>
                             <label><input type="checkbox" name="has_spa"> Spa</label>
                         </div>
-
                     </div>
- 
+
                     <div>
                         <div class="check-div">
                             <i class="fa-solid fa-dumbbell"></i>
@@ -104,7 +71,7 @@
                         </div>
                         <div class="check-div">
                             <i class="fa-solid fa-water"></i>
-                            <label><input type="checkbox" name="has_sea_view"> Manzara  </label>
+                            <label><input type="checkbox" name="has_sea_view"> Deniz Manzarası</label>
                         </div>
                         <div class="check-div">
                             <i class="fa-solid fa-wind"></i>
@@ -118,27 +85,17 @@
                             <i class="fa-solid fa-check-double"></i>
                             <label><input type="checkbox" name="is_all_inclusive"> Her Şey Dahil</label>
                         </div>
-
                     </div>
-
-               
                 </div>
-                             
-                <button>Kaydet</button>
-        
+
+                <div class="file-upload">
+                    <label>Görsel Yükle:</label>
+                    <input type="file" name="image" accept="image/*" required>
+                </div>
+
+                <button type="submit">Kaydet</button>
             </form>
-        
-        
         </div>
     </div>
-
-
-
- 
-
-
-  
-    
-    
 </body>
 </html>

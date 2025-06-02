@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezervasyonlar</title>
+</head>
+<body>
+    <h2 style="text-align:center;">Gelen Rezervasyonlar</h2>
+
+    <table border="1" style="margin:auto; width:80%; text-align:center;">
+      <tr>
+        <th>Otel</th>
+        <th>Giriş</th>
+        <th>Çıkış</th>
+        <th>Kişi Sayısı</th>
+        <th>Durum</th>
+        <th>Rezervasyon Sahibi</th>
+        <th>İşlemler</th>
+      </tr>
+      <% rezervasyonlar.forEach(r => { %>
+        <tr>
+          <td><%= r.Hotel.name %></td>
+          <td><%= r.start_date %></td>
+          <td><%= r.end_date %></td>
+          <td><%= r.guest_count %></td>
+          <td><%= r.status %></td>
+          <td><%= r.User ? r.User.username : "Bilinmiyor" %></td>
+          <td>
+            <!-- Silme butonu -->
+  <form action="/host/rezervasyonlar/sil/<%= r.id %>" method="get" style="display:inline;">
+  <button type="submit" onclick="return confirm('Silinsin mi?')">Sil</button>
+</form>
+
+
+
+            <!-- Onayla butonu -->
+            <% if (r.status !== 'confirmed') { %>
+              <form action="/rezervasyonlar/onayla/<%= r.id %>" method="post" style="display:inline;">
+                <button type="submit">Onayla</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+</body>
+</html>

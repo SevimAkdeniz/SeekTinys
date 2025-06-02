@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const Hotel = require("./hotels");
+const Reservation = require("./reservation")
 
 const bcrypt = require("bcrypt");
 
@@ -89,6 +90,9 @@ User.auth_login = async function (email, password) {
 
 User.hasMany(Hotel, { foreignKey: 'user_id' });
 Hotel.belongsTo(User, { foreignKey: 'user_id' });
+
+Reservation.belongsTo(User, { foreignKey: "user_id" });
+
 
 
 module.exports = User;

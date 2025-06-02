@@ -126,6 +126,8 @@ const Hotel = sequelize.define("Hotel", {
 
 
 
+
+
 Hotel.hasMany(HotelImage, { foreignKey: 'hotel_id' });
 HotelImage.belongsTo(Hotel, { foreignKey: 'hotel_id' });
 
