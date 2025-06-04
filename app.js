@@ -10,7 +10,10 @@ const authRoutes = require("./routes/authRouter");
 const hotelsRoute = require('./routes/hotels');
 const kiraciHotelRoutes = require('./routes/kiraci/hotels');
 const session = require("express-session");
+const adminRoutes = require('./routes/admin');
 
+
+const db = require('./models'); // tüm ilişkiler bu şekilde çekilecek
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -47,6 +50,9 @@ app.use('/kiraci', kiraciHotelRoutes);
 app.use(authRoutes);
 app.use('/host', hotelsRoute);
 
+app.use('/admin', adminRoutes);
+
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -66,13 +72,15 @@ app.get("/login", (req, res) => {
 });
 
 
+app.use('/hotel', hotelsRoute); // ➕ bu satırı ekle
+
 
 app.get("/signup", (req, res) => {
     res.render("signup");
 });
 
 app.get("/admin", (req,res)=>{
-    res.render("admin")
+    res.render("adminPanel")
 })
 
 

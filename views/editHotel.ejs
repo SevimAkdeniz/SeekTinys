@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Otel Düzenle</title>
+</head>
+<body>
+  <h1>🏨 Otel Düzenle</h1>
+  <form action="/hotel/edit/<%= hotel.id %>" method="POST">
+    <label>Ad:</label>
+    <input type="text" name="name" value="<%= hotel.name %>" required /><br />
+
+    <label>Konum:</label>
+    <input type="text" name="location" value="<%= hotel.location %>" required /><br />
+
+    <label>Gecelik Fiyat:</label>
+    <input type="number" name="price_per_night" value="<%= hotel.price_per_night %>" required /><br />
+
+    <button type="submit">Kaydet</button>
+  </form>
+</body>
+</html>

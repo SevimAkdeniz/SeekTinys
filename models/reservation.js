@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+const User = require("./users");
+const Hotel = require("./hotels");
 const Reservation = sequelize.define("Reservation", {
   id: {
     type: DataTypes.INTEGER,
@@ -36,5 +38,7 @@ const Reservation = sequelize.define("Reservation", {
   tableName: 'Reservations',
   timestamps: true
 });
+
+
 
 module.exports = Reservation;

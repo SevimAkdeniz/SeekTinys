@@ -88,11 +88,6 @@ User.auth_login = async function (email, password) {
 
 
 
-User.hasMany(Hotel, { foreignKey: 'user_id' });
-Hotel.belongsTo(User, { foreignKey: 'user_id' });
-
-Reservation.belongsTo(User, { foreignKey: "user_id" });
-
 
 
 module.exports = User;

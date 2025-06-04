@@ -229,7 +229,21 @@ router.get("/rezervasyonlar/sil/:id", async (req, res) => {
   }
 });
 
+router.get('/edit/:id', async (req, res) => {
+  const hotel = await Hotel.findByPk(req.params.id);
+  if (!hotel) return res.status(404).send("Otel bulunamadı.");
+  res.render('editHotel', { hotel });
+});
 
+// Form gönderilince oteli güncelle
+router.post('/edit/:id', async (req, res) => {
+  const { name, location, price_per_night } = req.body;
+  await Hotel.update(
+    { name, location, price_per_night },
+    { where: { id: req.params.id } }
+  );
+  res.redirect('/admin');
+});
 
 
 
