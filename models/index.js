@@ -4,6 +4,14 @@ const Reservation = require('./reservation');
 const HotelImage = require('./hotelImage');
 const Review = require('./review');
 
+
+const AvailableDate = require('./availableDate');
+
+// Otel -> Müsait Tarihler (1:N)
+Hotel.hasMany(AvailableDate, { foreignKey: 'hotel_id' });
+AvailableDate.belongsTo(Hotel, { foreignKey: 'hotel_id' });
+
+
 Hotel.hasMany(Review, { foreignKey: 'hotel_id' });
 User.hasMany(Review, { foreignKey: 'user_id' });
 Review.belongsTo(Hotel, { foreignKey: 'hotel_id' });

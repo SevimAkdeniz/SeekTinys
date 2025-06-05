@@ -3,12 +3,13 @@ const router = express.Router();
 const { Hotel, HotelImage, Review, User } = require('../../models');
 const { Reservation } = require('../../models');
 const sequelize = require('../../config/database');
+const AvailableDate = require('../../models/availableDate');
+
 
 
 
 
 const moment = require('moment');
-const { Op } = require("sequelize");
 const allFeatures = {
   has_pool: "Havuz",
   has_wifi: "Wi-Fi",
@@ -118,7 +119,7 @@ router.post('/yorum-ekle', async (req, res) => {
           comment
         }
       }
-    );  
+    );
     res.redirect('/kiraci/hotels/' + hotel_id);
   } catch (err) {
     console.error("Yorum eklenirken hata:", err);
@@ -126,6 +127,16 @@ router.post('/yorum-ekle', async (req, res) => {
   }
 });
 
+router.get('/rezervasyon/:hotelId', async (req, res) => {
+  const hotel = await Hotel.findByPk(req.params.hotelId);
+  const available = await AvailableDate.findOne({ where: { hotel_id: req.params.hotelId } });
+
+  res.render('kiraci/reservation', {
+    hotel,
+    available,
+    user: req.session.user || null
+  });
+});
 
 // 🏨 Otel Detay Sayfası
 router.get('/hotels/:id', async (req, res) => {
@@ -136,24 +147,29 @@ router.get('/hotels/:id', async (req, res) => {
         {
           model: Review,
           include: [User]
-        }
+        },
+        AvailableDate
       ]
     });
 
     if (!hotel) return res.status(404).send("Otel bulunamadı.");
 
-    // ✅ Fonksiyonla puan al
+    // ✅ Ortalama puanı fonksiyondan al
     const [result] = await sequelize.query('SELECT fn_average_score(:hotelId) AS score', {
       replacements: { hotelId: req.params.id }
     });
     const dynamicScore = result[0].score;
+
+    // ✅ İlk müsaitlik aralığını çek (birden fazla varsa)
+    const available = hotel.AvailableDates?.[0] || null;
 
     res.render('kiraci/hotel-detail', {
       hotel,
       allFeatures,
       reviews: hotel.Reviews || [],
       user: req.session.user || null,
-      dynamicScore
+      dynamicScore,
+      available
     });
 
   } catch (err) {
@@ -179,15 +195,15 @@ router.get('/rezervasyon/:id', async (req, res) => {
 });
 
 // 📨 Rezervasyon Verisini Kaydet
+const { Op } = require("sequelize");
+
 router.post('/rezervasyon/:id', async (req, res) => {
   try {
     const { start_date, end_date, guest_count } = req.body;
     const hotelId = req.params.id;
-
     const userId = req.session.user?.id;
-    if (!userId) {
-      return res.status(401).send("Oturum bulunamadı. Lütfen giriş yapın.");
-    }
+
+    if (!userId) return res.status(401).send("Oturum bulunamadı. Lütfen giriş yapın.");
 
     // 📆 Tarih doğrulama
     if (!moment(start_date, 'YYYY-MM-DD', true).isValid() ||
@@ -199,7 +215,32 @@ router.post('/rezervasyon/:id', async (req, res) => {
       return res.status(400).send("Çıkış tarihi, girişten önce olamaz.");
     }
 
-    // 💾 Kayıt işlemi
+    // 🔒 Müsaitlik kontrolü
+    const available = await AvailableDate.findOne({ where: { hotel_id: hotelId } });
+    if (!available) return res.status(400).send("Müsaitlik bilgisi bulunamadı.");
+
+    if (
+      new Date(start_date) < available.start_date ||
+      new Date(end_date) > available.end_date
+    ) {
+      return res.status(400).send("Seçilen tarihler müsaitlik dışında.");
+    }
+
+    // 🔁 Tarih çakışma kontrolü (üst üste binmeyi engelle)
+    const conflict = await Reservation.findOne({
+      where: {
+        hotel_id: hotelId,
+        status: { [Op.in]: ['pending', 'confirmed'] },
+        start_date: { [Op.lt]: end_date },
+        end_date: { [Op.gt]: start_date }
+      }
+    });
+
+    if (conflict) {
+      return res.status(400).send("Bu tarih aralığında zaten rezervasyon yapılmış.");
+    }
+
+    // 💾 Kaydetme (Stored Procedure ile)
     await sequelize.query(
       'CALL sp_create_reservation(:hotelId, :userId, :startDate, :endDate, :guestCount)',
       {
@@ -213,14 +254,24 @@ router.post('/rezervasyon/:id', async (req, res) => {
       }
     );
 
+    // Rezervasyon oluşturulduktan sonra id’yi alıp ödeme sayfasına yönlendir
+    const [created] = await sequelize.query(`
+  SELECT id FROM Reservations 
+  WHERE user_id = :userId 
+  ORDER BY createdAt DESC LIMIT 1
+`, {
+      replacements: { userId },
+      type: sequelize.QueryTypes.SELECT
+    });
 
+    res.redirect(`/kiraci/odeme/${created.id}`);
 
-    res.send("✅ Rezervasyon başarıyla oluşturuldu!");
   } catch (err) {
-    console.error("❌ Rezervasyon ekleme hatası:", err);
+    console.error("❌ Rezervasyon hatası:", err);
     res.status(500).send("Sunucu hatası.");
   }
 });
+
 
 
 // 👤 Giriş yapan kullanıcının rezervasyonları
@@ -272,6 +323,53 @@ router.post('/rezervasyon/iptal/:id', async (req, res) => {
     res.status(500).send("İptal sırasında hata oluştu.");
   }
 });
+
+
+// Ödeme ekranı (GET)
+router.get('/odeme/:reservationId', async (req, res) => {
+  const reservationId = req.params.reservationId;
+
+  const reservation = await Reservation.findByPk(reservationId, {
+    include: [Hotel]
+  });
+
+  if (!reservation) return res.status(404).send("Rezervasyon bulunamadı.");
+
+  const days = Math.ceil(
+    (new Date(reservation.end_date) - new Date(reservation.start_date)) / (1000 * 60 * 60 * 24)
+  );
+  const totalPrice = days * reservation.Hotel.price_per_night;
+
+  res.render('kiraci/odeme', { reservationId, totalPrice });
+});
+
+
+// Ödeme gönderildiğinde (POST)
+router.post('/odeme/:reservationId', async (req, res) => {
+  const { card_number, card_name, expire_date, cvv } = req.body;
+  const reservationId = req.params.reservationId;
+
+  try {
+    // (Gerçek senaryoda buraya ödeme API'si entegre edilir)
+    console.log("Ödeme alındı:", card_number, card_name);
+
+    // ✅ Ödeme başarılıysa güncelle
+    await Reservation.update(
+      {
+        is_paid: true // ← burası eklendi
+      },
+      {
+        where: { id: reservationId }
+      }
+    );
+
+    res.send("✅ Ödeme başarılı! Rezervasyon onaylandı.");
+  } catch (err) {
+    console.error("Ödeme sonrası hata:", err);
+    res.status(500).send("Bir hata oluştu.");
+  }
+});
+
 
 
 

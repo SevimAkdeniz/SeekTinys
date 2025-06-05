@@ -6,6 +6,8 @@ const HotelImage = require('../models/hotelImage')
 
 const Reservation = require('../models/reservation');
 const User = require('../models/users');
+const AvailableDate = require('../models/availableDate');
+
 
 
 
@@ -97,6 +99,15 @@ router.post('/add', upload.single('image'), async (req, res) => {
         image_url: imagePath
       });
     }
+
+    const { available_start_date, available_end_date } = req.body;
+
+  await AvailableDate.create({
+    hotel_id: hotel.id, // oteli kaydettikten sonra dönen id
+    start_date: available_start_date,
+    end_date: available_end_date
+  });
+
 
     res.redirect('/host/ilanlarim');
   } catch (err) {
@@ -257,13 +268,19 @@ router.post('/edit/:id', async (req, res) => {
 router.post("/rezervasyonlar/onayla/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    await Reservation.update({ status: "confirmed" }, { where: { id } });
+
+    await Reservation.update(
+      { status: "confirmed" },
+      { where: { id } }
+    );
+
     res.redirect("/host/rezervasyonlar");
   } catch (err) {
     console.error("Rezervasyon onaylanırken hata:", err);
     res.status(500).send("Onay işlemi başarısız.");
   }
 });
+
 
 
 

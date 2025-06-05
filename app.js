@@ -18,6 +18,7 @@ const db = require('./models'); // tüm ilişkiler bu şekilde çekilecek
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+const AvailableDate = require('./models/availableDate');
 
 
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ödeme Ekranı</title>
+  <link rel="stylesheet" href="/css/host.css">
+</head>
+<body>
+  <div class="add-house-main">
+    <div class="add-house">
+      <div class="section-title">
+        <hr>
+        <h2 style="color: rgb(0, 69, 159);">Ödeme Yap</h2>
+        <hr>
+      </div>
+
+      <form action="/kiraci/odeme/<%= reservationId %>" method="POST">
+        <p><strong>Toplam Tutar:</strong> ₺<%= totalPrice %></p>
+
+        <input type="text" name="card_number" placeholder="Kart Numarası" required>
+        <input type="text" name="card_name" placeholder="Kart Üzerindeki İsim" required>
+        <input type="text" name="expire_date" placeholder="AA/YY" required>
+        <input type="text" name="cvv" placeholder="CVV" required>
+
+        <div class="submit-btn">
+          <button type="submit">Ödemeyi Tamamla</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

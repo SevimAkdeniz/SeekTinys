@@ -33,7 +33,13 @@ const Reservation = sequelize.define("Reservation", {
     type: DataTypes.STRING,
     allowNull: false,
     defaultValue: 'pending' // veya 'confirmed', 'cancelled'
-  }
+  },
+
+  is_paid: {
+  type: DataTypes.BOOLEAN,
+  defaultValue: false
+},
+
 }, {
   tableName: 'Reservations',
   timestamps: true

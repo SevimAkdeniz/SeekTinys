@@ -212,3 +212,10 @@ textarea:focus {
   box-shadow: 0 0 4px rgba(77, 163, 255, 0.6);
 }
 
+.availability-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f7faff;
+  border: 1px solid #cde3ff;
+  border-radius: 12px;
+}

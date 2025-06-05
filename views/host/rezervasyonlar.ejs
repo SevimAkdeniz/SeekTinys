@@ -48,7 +48,7 @@
             </form>
 
             <% if (r.status !=='confirmed' ) { %>
-              <form action="/rezervasyonlar/onayla/<%= r.id %>" method="post">
+              <form action="/host/rezervasyonlar/onayla/<%= r.id %>" method="post">
                 <button class="btn confirm">Onayla</button>
               </form>
               <% } %>

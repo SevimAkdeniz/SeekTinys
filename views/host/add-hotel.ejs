@@ -19,16 +19,16 @@
 <body>
     <%- include('../inc/nav.ejs') %>
 
-      
+
 
         <div class="add-house-main">
 
             <div class="add-house">
-                  <div class="section-title">
-                <hr>
-                <h2 style="color: rgb(0, 69, 159);">Tiny House Ekleyin</h2>
-                <hr>
-            </div>
+                <div class="section-title">
+                    <hr>
+                    <h2 style="color: rgb(0, 69, 159);">Tiny House Ekleyin</h2>
+                    <hr>
+                </div>
                 <form action="/host/add" method="POST" enctype="multipart/form-data">
                     <div class="input-section">
                         <div id="name-location">
@@ -55,10 +55,10 @@
                             <label style="color: rgb(71, 71, 71); padding-bottom: 0.3rem;">Giriş Saati:</label>
                             <input type="time" style="width: 170px;" name="check_in_time" required>
                         </div>
-                           <div class="file-upload">
-                        <label for="imageUpload" class="custom-file-label">📁 Görsel Yükle</label>
-                        <input type="file" name="image" id="imageUpload" accept="image/*" required>
-                    </div>
+                        <div class="file-upload">
+                            <label for="imageUpload" class="custom-file-label">📁 Görsel Yükle</label>
+                            <input type="file" name="image" id="imageUpload" accept="image/*" required>
+                        </div>
 
                         <div>
                             <label style="color: rgb(65, 65, 65); padding-bottom: 0.3rem;">Çıkış Saati:</label>
@@ -113,8 +113,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="availability-section">
+                        <h5 style="margin-bottom: 10px; text-align:center;">Müsaitlik Tarihleri</h5>
+                        <div class="time-section">
+                            <div>
+                                <label style="color: rgb(65, 65, 65);">Başlangıç Tarihi:</label>
+                                <input type="date" name="available_start_date" required>
+                            </div>
+                            <div>
+                                <label style="color: rgb(65, 65, 65);">Bitiş Tarihi:</label>
+                                <input type="date" name="available_end_date" required>
+                            </div>
+                        </div>
+                    </div>
 
-                 
+
+
 
 
                     <div class="submit-btn">

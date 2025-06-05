@@ -18,7 +18,8 @@
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: "Bilinmiyor"
+       onDelete: 'CASCADE',
+    
     },
     name: {
       type: DataTypes.STRING,
