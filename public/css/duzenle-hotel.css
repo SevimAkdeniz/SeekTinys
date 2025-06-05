@@ -1,0 +1,107 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f8fc;
+}
+
+.section-title {
+   
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 40px 0 20px;
+  width: 43%;
+  
+}
+.title{  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-title hr {
+  flex-grow: 1;
+  height: 1px;
+  background-color: #ccc;
+  border: none;
+}
+
+.section-title h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+  white-space: nowrap;
+}
+
+.reservations-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.reservation-card {
+  background-color: #ffffff;
+  border: 1px solid #dcdfe3;
+  border-radius: 12px;
+  padding: 20px 24px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: 0.3s ease;
+}
+
+.reservation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.reservation-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #007BFF;
+}
+
+.reservation-card p {
+  margin: 4px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.reservation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn.confirm {
+  background-color: #4da3ff;
+  color: white;
+}
+
+.btn.confirm:hover {
+  background-color: #2f7fd1;
+}
+
+.btn.delete {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.btn.delete:hover {
+  background-color: #cc2b2b;
+}

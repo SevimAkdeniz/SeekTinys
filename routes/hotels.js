@@ -48,66 +48,71 @@ router.get("/add", (req, res) => {
 });
 
 
-router.post("/add", upload.single("image"), async (req, res) => {
-  console.log("Gelen BODY:", req.body);
-  console.log("Gelen DOSYA:", req.file);
+router.post('/add', upload.single('image'), async (req, res) => {
+  try {
+    const userId = req.session.user?.id;
+    if (!userId) return res.status(401).send("Giriş yapılmamış.");
 
-  const toBool = (val) => val === 'on';
-  const allFeatures = {
-    has_pool: "Havuz",
-    has_wifi: "Wi-Fi",
-    has_parking: "Otopark",
-    pet_friendly: "Evcil Hayvan",
-    has_spa: "Spa",
-    has_gym: "Spor Salonu",
-    has_sea_view: "Deniz Manzarası",
-    has_balcony: "Balkon",
-    has_air_conditioning: "Klima",
-    is_all_inclusive: "Her Şey Dahil"
-  };
+    const {
+      name, location, description,
+      price, distance_to_center,
+      max_guests, room_count,
+      check_in_time, check_out_time,
+      has_pool, has_wifi, has_parking,
+      pet_friendly, has_spa, has_gym,
+      has_sea_view, has_balcony,
+      has_air_conditioning, is_all_inclusive
+    } = req.body;
 
-  const activeKeys = Object.keys(allFeatures).filter(
-    (key) => req.body[key] === "on"
-  );
-  const shuffled = activeKeys.sort(() => 0.5 - Math.random());
-  const highlight_1 = allFeatures[shuffled[0]] || null;
-  const highlight_2 = allFeatures[shuffled[1]] || null;
+    const imagePath = req.file ? req.file.path.replace("public\\", "") : null;
 
-  await Hotel.create({
-    name: req.body.name,
-    location: req.body.location,
-    price_per_night: req.body.price,
-    user_id: 1, // geçici
-    distance_to_center: req.body.distance_to_center,
-    description: req.body.description,
-    check_in_time: req.body.check_in_time,
-    check_out_time: req.body.check_out_time,
-    max_guests: req.body.max_guests,
-    room_count: req.body.room_count,
-    image_path: req.file?.filename || null, // 🌟 görsel path'i kaydediliyor
+    const hotel = await Hotel.create({
+      user_id: userId, // ← Burada aktif kullanıcıyı kullanıyoruz
+      name,
+      location,
+      description,
+      price_per_night: price,
+      distance_to_center,
+      max_guests,
+      room_count,
+      check_in_time,
+      check_out_time,
+      has_pool: !!has_pool,
+      has_wifi: !!has_wifi,
+      has_parking: !!has_parking,
+      pet_friendly: !!pet_friendly,
+      has_spa: !!has_spa,
+      has_gym: !!has_gym,
+      has_sea_view: !!has_sea_view,
+      has_balcony: !!has_balcony,
+      has_air_conditioning: !!has_air_conditioning,
+      is_all_inclusive: !!is_all_inclusive,
+      highlight_1: has_spa ? 'Spa' : null,
+      highlight_2: has_parking ? 'Otopark' : null
+    });
 
-    has_pool: toBool(req.body.has_pool),
-    has_wifi: toBool(req.body.has_wifi),
-    has_parking: toBool(req.body.has_parking),
-    pet_friendly: toBool(req.body.pet_friendly),
-    has_spa: toBool(req.body.has_spa),
-    has_gym: toBool(req.body.has_gym),
-    has_sea_view: toBool(req.body.has_sea_view),
-    has_balcony: toBool(req.body.has_balcony),
-    has_air_conditioning: toBool(req.body.has_air_conditioning),
-    is_all_inclusive: toBool(req.body.is_all_inclusive),
+    if (imagePath) {
+      await HotelImage.create({
+        hotel_id: hotel.id,
+        image_url: imagePath
+      });
+    }
 
-    highlight_1,
-    highlight_2
-  });
-
-  res.redirect("/host/ilanlarim");
+    res.redirect('/host/ilanlarim');
+  } catch (err) {
+    console.error("Otel eklerken hata:", err);
+    res.status(500).send("Bir hata oluştu.");
+  }
 });
 
 router.get("/ilanlarim", async (req, res) => {
   try {
+    const userId = req.session.user?.id;
+
+    if (!userId) return res.redirect('/login');
+
     const ilanlar = await Hotel.findAll({
-      where: { user_id: 1 }, // Geçici olarak sabit, sonra req.session.user.id yapılır
+      where: { user_id: userId }, // Geçici olarak sabit, sonra req.session.user.id yapılır
     });
 
     res.render("host/ilanlarim", { ilanlar });
@@ -195,7 +200,9 @@ router.post("/duzenle/:id", async (req, res) => {
 
 router.get("/rezervasyonlar", async (req, res) => {
   try {
-    const userId = 1; // 👈 Giriş yapan otel sahibinin ID'si (ileride: req.session.user.id)
+     const userId = req.session.user?.id;
+
+    if (!userId) return res.redirect('/login'); // 👈 Giriş yapan otel sahibinin ID'si (ileride: req.session.user.id)
 
     const hotels = await Hotel.findAll({ where: { user_id: userId } });
     const hotelIds = hotels.map(h => h.id);

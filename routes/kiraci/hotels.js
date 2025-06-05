@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Hotel = require('../../models/hotels');
-const HotelImage = require('../../models/hotelImage');
-const Reservation = require('../../models/reservation');
+const { Hotel, HotelImage, Review, User } = require('../../models');
+const { Reservation } = require('../../models');
+const sequelize = require('../../config/database');
+
+
+
+
 const moment = require('moment');
 const { Op } = require("sequelize");
-
-
-// Tüm özellik isimleri
 const allFeatures = {
   has_pool: "Havuz",
   has_wifi: "Wi-Fi",
@@ -90,11 +91,11 @@ router.get('/hotels', async (req, res) => {
 
     // 4️⃣ Sonuçları sayfaya gönder
     res.render('kiraci/hotels', {
-  hotels,
-  location: req.query.location || '',
-  minPrice: req.query.minPrice || '',
-  maxPrice: req.query.maxPrice || ''
-});
+      hotels,
+      location: req.query.location || '',
+      minPrice: req.query.minPrice || '',
+      maxPrice: req.query.maxPrice || ''
+    });
 
   } catch (err) {
     console.error("❌ Filtreleme hatası:", err);
@@ -102,24 +103,65 @@ router.get('/hotels', async (req, res) => {
   }
 });
 
+router.post('/yorum-ekle', async (req, res) => {
+  const { comment, rating, hotel_id, user_id } = req.body;
+
+  try {
+
+    await sequelize.query(
+      'CALL sp_add_review_and_update_score(:userId, :hotelId, :rating, :comment)',
+      {
+        replacements: {
+          userId: user_id,
+          hotelId: hotel_id,
+          rating,
+          comment
+        }
+      }
+    );  
+    res.redirect('/kiraci/hotels/' + hotel_id);
+  } catch (err) {
+    console.error("Yorum eklenirken hata:", err);
+    res.status(500).send("Yorum eklenemedi.");
+  }
+});
+
+
 // 🏨 Otel Detay Sayfası
 router.get('/hotels/:id', async (req, res) => {
   try {
     const hotel = await Hotel.findByPk(req.params.id, {
-      include: [HotelImage]
+      include: [
+        HotelImage,
+        {
+          model: Review,
+          include: [User]
+        }
+      ]
     });
 
     if (!hotel) return res.status(404).send("Otel bulunamadı.");
 
+    // ✅ Fonksiyonla puan al
+    const [result] = await sequelize.query('SELECT fn_average_score(:hotelId) AS score', {
+      replacements: { hotelId: req.params.id }
+    });
+    const dynamicScore = result[0].score;
+
     res.render('kiraci/hotel-detail', {
       hotel,
-      allFeatures
+      allFeatures,
+      reviews: hotel.Reviews || [],
+      user: req.session.user || null,
+      dynamicScore
     });
+
   } catch (err) {
     console.error("Detay sayfası hatası:", err);
     res.status(500).send("Bir hata oluştu.");
   }
 });
+
 
 // 📝 Rezervasyon Formu Göster
 router.get('/rezervasyon/:id', async (req, res) => {
@@ -158,14 +200,20 @@ router.post('/rezervasyon/:id', async (req, res) => {
     }
 
     // 💾 Kayıt işlemi
-    await Reservation.create({
-      hotel_id: hotelId,
-      user_id: userId,
-      start_date,
-      end_date,
-      guest_count,
-      status: 'pending'
-    });
+    await sequelize.query(
+      'CALL sp_create_reservation(:hotelId, :userId, :startDate, :endDate, :guestCount)',
+      {
+        replacements: {
+          hotelId,
+          userId,
+          startDate: start_date,
+          endDate: end_date,
+          guestCount: guest_count
+        }
+      }
+    );
+
+
 
     res.send("✅ Rezervasyon başarıyla oluşturuldu!");
   } catch (err) {

@@ -1,78 +1,110 @@
 <html lang="tr">
+
 <head>
-  <%- include('../inc/head.ejs') %>
+  <link rel="stylesheet" href="/css/host.css">
 </head>
+
 <body>
   <%- include('../inc/nav.ejs') %>
 
-  <div id="edit-house-text">
-    <h2>İlanı Düzenle</h2>
-  </div>
+    <!-- Başlık kısmı -->
 
-  <div class="edit-house-main">
-    <div class="edit-house">
-      <form action="/host/duzenle/<%= ilan.id %>" method="POST">
-        <div class="input-section">
-          <input type="text" name="name" value="<%= ilan.name %>" required>
-          <input type="text" name="location" value="<%= ilan.location %>" required>
-          <input type="text" name="description" value="<%= ilan.description %>" required>
+
+    <!-- Form ana kutusu -->
+    <div class="add-house-main">
+
+      <div class="add-house" style="width: 48%;">
+        <div class="section-title">
+          <hr>
+          <h2 style="color: rgb(0, 69, 159);">İlanı Düzenle</h2>
+          <hr>
         </div>
+        <form action="/host/duzenle/<%= ilan.id %>" method="POST">
 
-        <div class="int-section">
-          <input type="number" name="price" value="<%= ilan.price_per_night %>" step="0.1" min="0" max="10000" required>
-          <input type="number" name="distance_to_center" value="<%= ilan.distance_to_center %>" step="0.1" min="0" max="1000">
-          <input type="number" name="max_guests" value="<%= ilan.max_guests %>" min="1" max="20">
-          <input type="number" name="room_count" value="<%= ilan.room_count %>" min="1" max="10">
-        </div>
-
-        <div class="time-section">
-          <label>Giriş Saati:</label>
-          <input type="time" name="check_in_time" value="<%= ilan.check_in_time %>">
-
-          <label>Çıkış Saati:</label>
-          <input type="time" name="check_out_time" value="<%= ilan.check_out_time %>">
-        </div>
-
-        <div class="check-section">
-          <div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_wifi" <%= ilan.has_wifi ? "checked" : "" %> > Wi-Fi</label>
+          <!-- Temel bilgiler -->
+          <div class="input-section">
+            <div id="name-location">
+              <input type="text" name="name" value="<%= ilan.name %>" required>
+              <input type="text" name="location" value="<%= ilan.location %>" required>
             </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_parking" <%= ilan.has_parking ? "checked" : "" %> > Otopark</label>
-            </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="pet_friendly" <%= ilan.pet_friendly ? "checked" : "" %> > Evcil Hayvan</label>
-            </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_pool" <%= ilan.has_pool ? "checked" : "" %> > Havuz</label>
-            </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_spa" <%= ilan.has_spa ? "checked" : "" %> > Spa</label>
+            <div id="description">
+              <input type="text" name="description" value="<%= ilan.description %>" required>
             </div>
           </div>
-          <div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_gym" <%= ilan.has_gym ? "checked" : "" %> > Spor Salonu</label>
+
+          <!-- Sayısal alanlar -->
+          <div class="int-section">
+            <input type="number" name="price" value="<%= ilan.price_per_night %>" step="0.1" min="0" max="10000"
+              required>
+            <input type="number" name="distance_to_center" value="<%= ilan.distance_to_center %>" step="0.1" min="0"
+              max="1000">
+            <input type="number" name="max_guests" value="<%= ilan.max_guests %>" min="1" max="20">
+            <input type="number" name="room_count" value="<%= ilan.room_count %>" min="1" max="10">
+          </div>
+
+          <!-- Giriş çıkış saatleri -->
+          <div class="time-section">
+            <div>
+              <label style="color: rgb(65, 65, 65); padding-bottom: 0.3rem;">Giriş Saati:</label>
+              <input type="time" name="check_in_time"  style="width: 170px;" value="<%= ilan.check_in_time %>">
             </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_sea_view" <%= ilan.has_sea_view ? "checked" : "" %> > Deniz Manzarası</label>
-            </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_air_conditioning" <%= ilan.has_air_conditioning ? "checked" : "" %> > Klima</label>
-            </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="has_balcony" <%= ilan.has_balcony ? "checked" : "" %> > Balkon</label>
-            </div>
-            <div class="check-div">
-              <label><input type="checkbox" name="is_all_inclusive" <%= ilan.is_all_inclusive ? "checked" : "" %> > Her Şey Dahil</label>
+            <div>
+              <label style="color: rgb(65, 65, 65); padding-bottom: 0.3rem;">Çıkış Saati:</label>
+              <input type="time" name="check_out_time" style="width: 170px;" value="<%= ilan.check_out_time %>">
             </div>
           </div>
-        </div>
 
-        <button type="submit">Güncelle</button>
-      </form>
+          <!-- Özellik checkboxları -->
+          <div class="check-section">
+            <div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_wifi" <%=ilan.has_wifi ? "checked" : "" %>> Wi-Fi</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_parking" <%=ilan.has_parking ? "checked" : "" %>>
+                  Otopark</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="pet_friendly" <%=ilan.pet_friendly ? "checked" : "" %>> Evcil
+                  Hayvan</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_pool" <%=ilan.has_pool ? "checked" : "" %>> Havuz</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_spa" <%=ilan.has_spa ? "checked" : "" %>> Spa</label>
+              </div>
+            </div>
+            <div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_gym" <%=ilan.has_gym ? "checked" : "" %>> Spor Salonu</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_sea_view" <%=ilan.has_sea_view ? "checked" : "" %>> Deniz
+                  Manzarası</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_air_conditioning" <%=ilan.has_air_conditioning ? "checked" : ""
+                    %>> Klima</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="has_balcony" <%=ilan.has_balcony ? "checked" : "" %>> Balkon</label>
+              </div>
+              <div class="check-div">
+                <label><input type="checkbox" name="is_all_inclusive" <%=ilan.is_all_inclusive ? "checked" : "" %>> Her
+                  Şey Dahil</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gönder butonu -->
+          <div class="submit-btn">
+            <button type="submit">Güncelle</button>
+          </div>
+
+        </form>
+      </div>
     </div>
-  </div>
 </body>
+
 </html>

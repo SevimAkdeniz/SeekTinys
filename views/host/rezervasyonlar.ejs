@@ -1,47 +1,61 @@
-<html lang="en">
+<html lang="tr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rezervasyonlar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gelen Rezervasyonlar</title>
+  <link rel="stylesheet" href="/css/duzenle-hotel.css">
 </head>
+
 <body>
-    <h2 style="text-align:center;">Gelen Rezervasyonlar</h2>
+  <%- include('../inc/nav.ejs') %>
 
-    <table border="1" style="margin:auto; width:80%; text-align:center;">
-      <tr>
-        <th>Otel</th>
-        <th>Giriş</th>
-        <th>Çıkış</th>
-        <th>Kişi Sayısı</th>
-        <th>Durum</th>
-        <th>Rezervasyon Sahibi</th>
-        <th>İşlemler</th>
-      </tr>
-      <% rezervasyonlar.forEach(r => { %>
-        <tr>
-          <td><%= r.Hotel.name %></td>
-          <td><%= r.start_date %></td>
-          <td><%= r.end_date %></td>
-          <td><%= r.guest_count %></td>
-          <td><%= r.status %></td>
-          <td><%= r.User ? r.User.username : "Bilinmiyor" %></td>
-          <td>
-            <!-- Silme butonu -->
-  <form action="/host/rezervasyonlar/sil/<%= r.id %>" method="get" style="display:inline;">
-  <button type="submit" onclick="return confirm('Silinsin mi?')">Sil</button>
-</form>
+    <div class="title">
+      <div class="section-title">
+        <hr>
+        <h2>Gelen Rezervasyonlar</h2>
+        <hr>
 
+      </div>
 
+    </div>
 
-            <!-- Onayla butonu -->
-            <% if (r.status !== 'confirmed') { %>
-              <form action="/rezervasyonlar/onayla/<%= r.id %>" method="post" style="display:inline;">
-                <button type="submit">Onayla</button>
+    <div class="reservations-container">
+      <% rezervasyonlar.forEach(r=> { %>
+        <div class="reservation-card">
+          <h3>
+            <%= r.Hotel.name %>
+          </h3>
+          <p><strong>Giriş:</strong>
+            <%= r.start_date %>
+          </p>
+          <p><strong>Çıkış:</strong>
+            <%= r.end_date %>
+          </p>
+          <p><strong>Kişi Sayısı:</strong>
+            <%= r.guest_count %>
+          </p>
+          <p><strong>Durum:</strong>
+            <%= r.status %>
+          </p>
+          <p><strong>Rezervasyon Sahibi:</strong>
+            <%= r.User ? r.User.username : "Bilinmiyor" %>
+          </p>
+
+          <div class="reservation-actions">
+            <form action="/host/rezervasyonlar/sil/<%= r.id %>" method="get">
+              <button class="btn delete" onclick="return confirm('Silinsin mi?')">Sil</button>
+            </form>
+
+            <% if (r.status !=='confirmed' ) { %>
+              <form action="/rezervasyonlar/onayla/<%= r.id %>" method="post">
+                <button class="btn confirm">Onayla</button>
               </form>
-            <% } %>
-          </td>
-        </tr>
-      <% }) %>
-    </table>
+              <% } %>
+          </div>
+        </div>
+        <% }) %>
+    </div>
 </body>
+
 </html>

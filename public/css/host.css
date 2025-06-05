@@ -1,0 +1,214 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+
+
+#add-house-text {
+  text-align: center;
+  margin-top: 30px;
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.section-title hr {
+  flex-grow: 1;
+  height: 1px;
+  background-color: #aaa;
+  border: none;
+}
+
+.section-title h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+}
+
+
+.add-house-main {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.add-house {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 800px;
+}
+
+.input-section,
+.int-section,
+.time-section {
+  margin-bottom: 20px;
+}
+
+#name-location {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+#name-location input {
+  flex: 1;
+}
+
+#description input {
+  width: 100%;
+}
+
+.int-section {
+  display: flex;
+  gap: 15px;
+}
+
+.int-section input {
+  flex: 1;
+}
+
+.time-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.time-section div {
+  display: flex;
+  flex-direction: column;
+}
+
+.check-section {
+  background-color: #f3f3f3;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.check-section>div {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.check-div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.check-div:hover {
+  background-color: #e6f4ff;
+  border-color: #4da3ff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.check-div i {
+  font-size: 18px;
+  color: #4da3ff;
+}
+
+.check-div label {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+input[type="file"] {
+  display: none;
+  /* 👈 Orijinal "Dosya Seç" butonunu gizle */
+}
+
+.custom-file-label {
+  background-color: #007BFF;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.custom-file-label:hover {
+  background-color: #0056b3;
+}
+
+.submit-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.submit-btn button {
+  background-color: #4da3ff;
+  color: white;
+  padding: 10px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 200px;
+}
+
+.submit-btn button:hover {
+  background-color: #2f7fd1;
+}
+
+
+
+
+input[type="text"],
+input[type="number"],
+input[type="time"],
+select,
+textarea {
+  padding: 10px;
+  border: 2px solid #d0e4ff;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="time"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #4da3ff;
+  box-shadow: 0 0 4px rgba(77, 163, 255, 0.6);
+}
+
