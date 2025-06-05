@@ -1,0 +1,5 @@
+ <label>Giriş Tarihi:</label>
+  <input type="date" name="start_date" value="<%= typeof start_date !== 'undefined' ? start_date : '' %>" />
+
+  <label>Çıkış Tarihi:</label>
+  <input type="date" name="end_date" value="<%= typeof end_date !== 'undefined' ? end_date : '' %>" />

@@ -1,0 +1,132 @@
+.ilanlar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  margin: 40px auto;
+  width: 90%;
+}
+
+.ilan-kart {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+  width: 100%;
+  max-width: 900px;
+}
+
+.ilan-kart img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.no-image {
+  width: 300px;
+  height: 200px;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  color: #999;
+}
+
+.ilan-bilgi {
+  padding: 20px;
+  flex: 1;
+}
+
+.ilan-bilgi h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.ilan-bilgi p {
+  margin: 8px 0;
+}
+
+.butonlar {
+  margin-top: 15px;
+}
+
+.butonlar button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.butonlar button:hover {
+  background-color: #0056b3;
+}
+
+form {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 950px;
+  margin: 0 auto 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  font-family: sans-serif;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"] {
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  flex: 1 1 200px;
+  min-width: 200px;
+  background-color: white;
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 sütun yapar */
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+
+.checkbox-group label {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+form button[type="submit"] {
+  padding: 10px 22px;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+  background-color: #2563eb;
+}

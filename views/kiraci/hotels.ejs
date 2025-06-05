@@ -1,86 +1,81 @@
 <html lang="en">
-
 <head>
-  <%-include('../inc/head.ejs')%>
-  <link rel="stylesheet" href="/css/hotels.css">
+  <%- include('../inc/head.ejs') %>
+  <link rel="stylesheet" href="/css/kiraci-hotel.css">
 </head>
-
 <body>
 
-  <%-include('../inc/nav.ejs')%>
+  <%- include('../inc/nav.ejs') %>
 
+  <div class="ilanlar-baslik">
+    <div class="line"></div>
     <h2>🏡 Tiny House İlanları</h2>
+    <div class="line"></div>
+  </div>
 
-    <!-- 🔍 Filtreleme Formu -->
-<form method="GET" action="/kiraci/hotels" style="margin-bottom: 20px;">
-  <!-- 📍 Konum ve Fiyat -->
-  <input type="text" name="location" placeholder="Konum" value="<%= typeof location !== 'undefined' ? location : '' %>" />
-  <input type="number" name="minPrice" placeholder="Min ₺" value="<%= typeof minPrice !== 'undefined' ? minPrice : '' %>" />
-  <input type="number" name="maxPrice" placeholder="Max ₺" value="<%= typeof maxPrice !== 'undefined' ? maxPrice : '' %>" />
+  <!-- 🔍 Filtreleme Formu -->
+  <form method="GET" action="/kiraci/hotels">
 
-  <br><br>
+  <!-- 🧭 Satır 1: Konum ve Fiyat -->
+  <div class="form-row">
+    <input type="text" name="location" placeholder="Konum" value="<%= location || '' %>" />
+    <input type="number" name="minPrice" placeholder="Min ₺" value="<%= minPrice || '' %>" />
+    <input type="number" name="maxPrice" placeholder="Max ₺" value="<%= maxPrice || '' %>" />
+  </div>
 
-  <!-- 📍 Özellik Filtreleri (Checkbox) -->
-  <label><input type="checkbox" name="has_pool" <%= typeof has_pool !== 'undefined' ? "checked" : "" %> /> Havuz</label>
-  <label><input type="checkbox" name="has_wifi" <%= typeof has_wifi !== 'undefined' ? "checked" : "" %> /> Wi-Fi</label>
-  <label><input type="checkbox" name="has_parking" <%= typeof has_parking !== 'undefined' ? "checked" : "" %> /> Otopark</label>
-  <label><input type="checkbox" name="pet_friendly" <%= typeof pet_friendly !== 'undefined' ? "checked" : "" %> /> Evcil Hayvan</label>
-  <label><input type="checkbox" name="has_spa" <%= typeof has_spa !== 'undefined' ? "checked" : "" %> /> Spa</label>
-  <label><input type="checkbox" name="has_gym" <%= typeof has_gym !== 'undefined' ? "checked" : "" %> /> Spor Salonu</label>
-  <label><input type="checkbox" name="has_sea_view" <%= typeof has_sea_view !== 'undefined' ? "checked" : "" %> /> Deniz Manzarası</label>
-  <label><input type="checkbox" name="has_balcony" <%= typeof has_balcony !== 'undefined' ? "checked" : "" %> /> Balkon</label>
-  <label><input type="checkbox" name="has_air_conditioning" <%= typeof has_air_conditioning !== 'undefined' ? "checked" : "" %> /> Klima</label>
-  <label><input type="checkbox" name="is_all_inclusive" <%= typeof is_all_inclusive !== 'undefined' ? "checked" : "" %> /> Her Şey Dahil</label>
+  <!-- 🕒 Satır 2: Tarihler -->
+  <div class="form-row">
+    <input type="date" name="start_date" value="<%= start_date || '' %>" />
+    <input type="date" name="end_date" value="<%= end_date || '' %>" />
+  </div>
 
-  <br><br>
+  <!-- ✅ Özellik Checkboxları -->
+  <div class="checkbox-group">
+    <label><input type="checkbox" name="has_pool" <%= has_pool ? "checked" : "" %> /> Havuz</label>
+    <label><input type="checkbox" name="has_wifi" <%= has_wifi ? "checked" : "" %> /> Wi-Fi</label>
+    <label><input type="checkbox" name="has_parking" <%= has_parking ? "checked" : "" %> /> Otopark</label>
+    <label><input type="checkbox" name="pet_friendly" <%= pet_friendly ? "checked" : "" %> /> Evcil Hayvan</label>
+    <label><input type="checkbox" name="has_spa" <%= has_spa ? "checked" : "" %> /> Spa</label>
+    <label><input type="checkbox" name="has_gym" <%= has_gym ? "checked" : "" %> /> Spor Salonu</label>
+    <label><input type="checkbox" name="has_sea_view" <%= has_sea_view ? "checked" : "" %> /> Deniz Manzarası</label>
+    <label><input type="checkbox" name="has_balcony" <%= has_balcony ? "checked" : "" %> /> Balkon</label>
+    <label><input type="checkbox" name="has_air_conditioning" <%= has_air_conditioning ? "checked" : "" %> /> Klima</label>
+    <label><input type="checkbox" name="is_all_inclusive" <%= is_all_inclusive ? "checked" : "" %> /> Her Şey Dahil</label>
+  </div>
 
-  <!-- 📍 Tarih Filtreleri -->
-  <label>Giriş Tarihi:</label>
-  <input type="date" name="start_date" value="<%= typeof start_date !== 'undefined' ? start_date : '' %>" />
-
-  <label>Çıkış Tarihi:</label>
-  <input type="date" name="end_date" value="<%= typeof end_date !== 'undefined' ? end_date : '' %>" />
-
-  <br><br>
+  <!-- 🔘 Buton -->
   <button type="submit">Filtrele</button>
 </form>
-    <!-- 🏘️ Otel Listesi -->
-    <div class="hotel-list" style="display: flex; flex-wrap: wrap; gap: 20px;">
-      <% hotels.forEach(hotel=> { %>
-        <div class="hotel-card" style="border: 1px solid #ccc; padding: 10px; width: 250px;">
-          <img src="<%= hotel.hotel_images?.[0]?.image_path || '/images/default.jpg' %>" alt="Otel Görseli"
-            style="width: 100%; height: 150px; object-fit: cover;" />
 
-          <h3>
-            <%= hotel.name %>
-          </h3>
-          <p><strong>Konum:</strong>
-            <%= hotel.location %>
+  <!-- 🏘️ Otel Listesi -->
+  <div class="ilanlar-wrapper">
+    <% hotels.forEach(hotel => { %>
+      <div class="ilan-kart">
+        <% if (hotel.hotel_images && hotel.hotel_images.length > 0) { %>
+          <img src="<%= hotel.hotel_images[0].image_path %>" alt="Otel Görseli">
+        <% } else { %>
+          <div class="no-image">Görsel yok</div>
+        <% } %>
+
+        <div class="ilan-bilgi">
+          <h3><%= hotel.name %></h3>
+          <p><strong>Konum:</strong> <%= hotel.location %></p>
+          <p><strong>Fiyat:</strong> ₺<%= hotel.price_per_night %></p>
+          <p><strong>Kapasite:</strong> <%= hotel.max_guests %> kişi</p>
+          <p><strong>Öne Çıkanlar:</strong> 
+            <% if (hotel.highlight_1) { %><%= hotel.highlight_1 %><% } %>
+            <% if (hotel.highlight_2) { %> - <%= hotel.highlight_2 %><% } %>
           </p>
-          <p><strong>Fiyat:</strong>
-            <%= hotel.price_per_night %>₺ / gece
-          </p>
 
-          <% if (hotel.highlight_1) { %>
-            <p>✨ <%= hotel.highlight_1 %>
-            </p>
-            <% } %>
-              <% if (hotel.highlight_2) { %>
-                <p>✨ <%= hotel.highlight_2 %>
-                </p>
-                <% } %>
-
-                  <a href="/kiraci/hotels/<%= hotel.id %>">
-                    <button>Detayları Gör</button>
-                  </a>
+          <div class="butonlar">
+            <a href="/kiraci/hotels/<%= hotel.id %>">
+              <button>Detayları Gör</button>
+            </a>
+          </div>
         </div>
-        <% }) %>
-    </div>
-
-
-
-
+      </div>
+    <% }) %>
+  </div>
 
 </body>
-
 </html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+
+<body>
+
+  <h1>🛠️ Admin Paneli</h1>
+  <p class="admin-info">👋 Giriş yapan admin: <%= user?.name || "Bilinmiyor" %>
+  </p>
+
+
+
+
+  <div class="stat-box-container">
+    <div class="stat-box">
+      <h4>Toplam Kullanıcı</h4>
+      <p>
+        <%= totalUsers %>
+      </p>
+    </div>
+    <div class="stat-box">
+      <h4>Otel Sahibi Sayısı</h4>
+      <p>
+        <%= totalAdmins %>
+      </p>
+    </div>
+    <div class="stat-box">
+      <h4>Müşteri Sayısı</h4>
+      <p>
+        <%= totalCustomers %>
+      </p>
+    </div>
+    <div class="stat-box">
+      <h4>Otel İlanı</h4>
+      <p>
+        <%= totalHotels %>
+      </p>
+    </div>
+    <div class="stat-box">
+      <h4>Rezervasyon</h4>
+      <p>
+        <%= totalReservations %>
+      </p>
+    </div>
+    <div class="stat-box">
+      <h4>Yorum Sayısı</h4>
+      <p>
+        <%= totalReviews %>
+      </p>
+    </div>
+  </div>
+
+  <div class="grafik-wrapper">
+    <div class="chart-box">
+      <canvas id="kullaniciGrafigi"></canvas>
+    </div>
+    <div class="chart-box">
+      <canvas id="otelRezervasyonGrafigi"></canvas>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button onclick="showSection('users')">👤 Kullanıcı Yönetimi</button>
+    <button onclick="showSection('hotels')">🏨 Otel Yönetimi</button>
+    <button onclick="showSection('reservations')">📅 Rezervasyon Yönetimi</button>
+  </div>
+
+  <div id="users" class="section" style="display: none;">
+    <%- include('partials/_admin_users') %>
+  </div>
+
+  <div id="hotels" class="section" style="display: none;">
+    <%- include('partials/_admin_hotels') %>
+  </div>
+
+  <div id="reservations" class="section" style="display: none;">
+    <%- include('partials/_admin_reservations') %>
+  </div>
+
+
+
+  <script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(div => div.style.display = 'none');
+    const target = document.getElementById(id);
+    if (target) {
+      target.style.display = 'block';
+      localStorage.setItem('activeSection', id);
+    }
+  }
+
+  // Scroll pozisyonunu kaydet
+  window.addEventListener('beforeunload', () => {
+    localStorage.setItem('scrollPos', window.scrollY);
+  });
+
+  // Sayfa yüklenince scroll pozisyonunu ve aktif sekmeyi geri yükle
+  window.addEventListener('DOMContentLoaded', () => {
+    const active = localStorage.getItem('activeSection') || 'users';
+    showSection(active);
+
+    const scrollPos = localStorage.getItem('scrollPos');
+    if (scrollPos !== null) {
+      window.scrollTo(0, parseInt(scrollPos));
+    }
+
+    // Formları işle (users, hotels, reservations hepsi için)
+    document.querySelectorAll("form.delete-form").forEach(form => {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const confirmed = confirm("Bu kaydı silmek istediğinize emin misiniz?");
+        if (!confirmed) return;
+
+        fetch(form.action, {
+          method: 'POST'
+        })
+        .then(res => {
+          if (res.ok) {
+            const row = form.closest("tr");
+            if (row) row.remove();
+          } else {
+            alert("Silme işlemi başarısız oldu.");
+          }
+        })
+        .catch(err => {
+          console.error("Silme hatası:", err);
+          alert("Bir hata oluştu.");
+        });
+      });
+    });
+  });
+</script>
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+
+    // 1️⃣ Kullanıcı Grafiği (Owner vs Customer)
+    const userCtx = document.getElementById('kullaniciGrafigi').getContext('2d');
+    new Chart(userCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sahip (Owner)', 'Müşteri (Customer)'],
+        datasets: [{
+          label: 'Kullanıcı Türleri',
+          data: [<%= totalAdmins %>, <%= totalCustomers %>],
+          backgroundColor: ['#34d399', '#fbbf24'],
+          borderRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Kullanıcılar'
+          },
+          legend: {
+            display: true,
+            position: 'bottom'
+          }
+        }
+      }
+
+    });
+
+    // 2️⃣ İlan ve Rezervasyon Grafiği
+    const otelCtx = document.getElementById('otelRezervasyonGrafigi').getContext('2d');
+    new Chart(otelCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Oteller', 'Rezervasyonlar'],
+        datasets: [{
+          label: 'Toplam Sayı',
+          data: [<%= totalHotels %>, <%= totalReservations %>],
+          backgroundColor: ['#60a5fa', '#f87171'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'İlan ve Rezervasyonlar'
+          },
+          legend: {
+            display: true,
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -30,7 +30,7 @@ const auth_login_post = async (req, res) => {
             include: [require('../models/users'), require('../models/hotels')]
         });
 
-        return res.render("adminPanel", { hotels, users, reservations });
+        return res.redirect("/admin");
     }
 
 

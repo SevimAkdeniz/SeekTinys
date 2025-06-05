@@ -4,18 +4,41 @@ const router = express.Router();
 const isAdmin = require('../middlewares/isAdmin');
 
 // Modeller
-const { User, Hotel, Reservation } = require('../models');
+
+const { User, Hotel, Reservation, Review } = require('../models');
 
 router.get('/', isAdmin, async (req, res) => {
   try {
+    const user = req.session.user;
     const hotels = await Hotel.findAll();
     const users = await User.findAll();
-
     const reservations = await Reservation.findAll({
-      include: [User, Hotel]// alias yok artık ✅
+      include: [
+        { model: User },
+        { model: Hotel }
+      ]
     });
 
-    res.render('adminPanel', { hotels, users, reservations });
+    // Sayımlar
+    const totalUsers = await User.count();
+    const totalCustomers = await User.count({ where: { role: 'customer' } }); // veya 'user'
+    const totalAdmins = await User.count({ where: { role: 'owner' } });
+    const totalHotels = await Hotel.count();
+    const totalReservations = await Reservation.count();
+    const totalReviews = await Review.count();
+
+    res.render('admin/adminPanel', {
+      user,
+      hotels,
+      users,
+      reservations,
+      totalUsers,
+      totalCustomers,
+      totalAdmins,
+      totalHotels,
+      totalReservations,
+      totalReviews
+    });
   } catch (error) {
     console.error("Admin panel hatası:", error);
     res.status(500).send("Admin panel yüklenemedi.");
@@ -45,7 +68,7 @@ router.post('/delete-reservation/:id', isAdmin, async (req, res) => {
 router.get('/edit-user/:id', isAdmin, async (req, res) => {
   const user = await User.findByPk(req.params.id);
   if (!user) return res.status(404).send("Kullanıcı bulunamadı");
-  res.render('editUser', { user });
+  res.render('admin/editUser', { user });
 });
 
 // Kullanıcı bilgilerini güncelle

@@ -92,11 +92,24 @@ router.get('/hotels', async (req, res) => {
 
     // 4️⃣ Sonuçları sayfaya gönder
     res.render('kiraci/hotels', {
-      hotels,
-      location: req.query.location || '',
-      minPrice: req.query.minPrice || '',
-      maxPrice: req.query.maxPrice || ''
-    });
+  hotels,
+  location: req.query.location,
+  minPrice: req.query.minPrice,
+  maxPrice: req.query.maxPrice,
+  start_date: req.query.start_date,
+  end_date: req.query.end_date,
+  has_pool: req.query.has_pool,
+  has_wifi: req.query.has_wifi,
+  has_parking: req.query.has_parking,
+  pet_friendly: req.query.pet_friendly,
+  has_spa: req.query.has_spa,
+  has_gym: req.query.has_gym,
+  has_sea_view: req.query.has_sea_view,
+  has_balcony: req.query.has_balcony,
+  has_air_conditioning: req.query.has_air_conditioning,
+  is_all_inclusive: req.query.is_all_inclusive
+});
+
 
   } catch (err) {
     console.error("❌ Filtreleme hatası:", err);

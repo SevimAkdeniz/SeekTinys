@@ -1,0 +1,35 @@
+<h2>👤 Kullanıcı Yönetimi</h2>
+
+<table>
+  <tr>
+    <th>Kullanıcı Adı</th>
+    <th>Email</th>
+    <th>Rol</th>
+    <th>İşlem</th>
+  </tr>
+  <% users.forEach(user=> { %>
+    <tr>
+      <td>
+        <%= user.username %>
+      </td>
+      <td>
+        <%= user.email %>
+      </td>
+      <td>
+        <%= user.role %>
+      </td>
+      <td>
+
+        <div class="action-buttons">
+          <form action="/admin/delete-user/<%= user.id %>" method="POST" class="delete-form">
+            <button class="btn danger">❌ Sil</button>
+          </form>
+          <a href="/admin/edit-user/<%= user.id %>" class="btn primary">✏️ Düzenle</a>
+        </div>
+
+
+
+      </td>
+    </tr>
+    <% }) %>
+</table>

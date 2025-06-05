@@ -81,7 +81,7 @@ app.get("/signup", (req, res) => {
 });
 
 app.get("/admin", (req,res)=>{
-    res.render("adminPanel")
+    res.render("admin/adminPanel")
 })
 
 

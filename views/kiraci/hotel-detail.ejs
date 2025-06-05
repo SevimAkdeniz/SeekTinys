@@ -3,95 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <title><%= hotel.name %> | Detay</title>
-  <link rel="stylesheet" href="/css/hotelDetail.css">
+  <link rel="stylesheet" href="/css/hotel-detay.css">
 </head>
 <body>
+  <div class="container">
 
-  <h2><%= hotel.name %></h2>
-  <p><strong>Konum:</strong> <%= hotel.location %> | <strong>Merkeze uzaklık:</strong> <%= hotel.distance_to_center %> km</p>
-  <p><strong>Fiyat:</strong> <%= hotel.price_per_night %> ₺ / gece</p>
-<p><strong>Puan:</strong> ⭐ <%= hotel.review_score !== null ? hotel.review_score : "Henüz yok" %></p>
-  <p><strong>Yıldız:</strong> <%= hotel.star_rating || "-" %></p>
-  <p><strong>Açıklama:</strong> <%= hotel.description %></p>
+    <h2><%= hotel.name %></h2>
 
-  <hr>
+    <p><strong>Konum:</strong> <%= hotel.location %> | <strong>Merkeze uzaklık:</strong> <%= hotel.distance_to_center %> km</p>
+    <p><strong>Fiyat:</strong> ₺<%= hotel.price_per_night %> / gece</p>
+    <p><strong>Ortalama Puan:</strong> <%= hotel.review_score !== null ? hotel.review_score : "Henüz yok" %></p>
 
-  <!-- 🖼️ Görseller -->
-  <h4>Fotoğraflar</h4>
-  <% if (hotel.hotel_images && hotel.hotel_images.length > 0) { %>
-    <div style="display: flex; gap: 10px;">
-      <% hotel.hotel_images.forEach(img => { %>
-        <img src="<%= img.image_path %>" alt="otel foto" width="200">
-      <% }) %>
-    </div>
-  <% } else { %>
-    <p>📷 Görsel bulunamadı.</p>
-  <% } %>
-
-  <hr>
-
-  <!-- 🧾 Ek Bilgiler -->
-  <p><strong>Check-in:</strong> <%= hotel.check_in_time %> | <strong>Check-out:</strong> <%= hotel.check_out_time %></p>
-  <p><strong>Maksimum Kişi:</strong> <%= hotel.max_guests %> | <strong>Oda:</strong> <%= hotel.room_count %></p>
-
-  <% if (hotel.highlight_1 || hotel.highlight_2) { %>
-    <h4>Öne Çıkan Özellikler</h4>
-    <ul>
-      <% if (hotel.highlight_1) { %><li><%= hotel.highlight_1 %></li><% } %>
-      <% if (hotel.highlight_2) { %><li><%= hotel.highlight_2 %></li><% } %>
-    </ul>
-  <% } %>
-
-  <h4>Olanaklar</h4>
-  <ul>
-    <% for (const [key, label] of Object.entries(allFeatures)) { %>
-      <% if (hotel[key]) { %>
-        <li>✅ <%= label %></li>
+    <p><strong>Yıldız:</strong>
+      <% for (let i = 0; i < hotel.star_rating; i++) { %>
+        ⭐
       <% } %>
-    <% } %>
-  </ul>
+      (<%= hotel.star_rating %>/5)
+    </p>
 
-  <!-- 🔘 Rezervasyon Butonu -->
-  <form method="GET" action="/kiraci/rezervasyon/<%= hotel.id %>">
-    <button type="submit">Rezervasyon Yap</button>
-  </form>
+    <p><strong>Açıklama:</strong> <%= hotel.description %></p>
 
-  <hr>
+    <hr>
 
-  <!-- ✍️ Yorum Ekle -->
-  <h3>Yorum Yap</h3>
-  <% if (user) { %>
-    <form method="POST" action="/kiraci/yorum-ekle">
-      <input type="hidden" name="hotel_id" value="<%= hotel.id %>">
-      <input type="hidden" name="user_id" value="<%= user.id %>">
-      <label for="rating">Puan (1-5):</label>
-      <select name="rating" required>
-        <% for(let i = 1; i <= 5; i++) { %>
-          <option value="<%= i %>"><%= i %></option>
-        <% } %>
-      </select>
-      <br>
-      <textarea name="comment" rows="3" cols="40" placeholder="Yorumunuz..." required></textarea><br>
-      <button type="submit">Gönder</button>
-    </form>
-  <% } else { %>
-    <p>Yorum yapabilmek için <a href="/login">giriş yapın</a>.</p>
-  <% } %>
-
-  <!-- 💬 Yapılmış Yorumlar -->
-  <h3>Yorumlar</h3>
-  <% if (reviews && reviews.length > 0) { %>
-    <% reviews.forEach(r => { %>
-      <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
-        <strong><%= r.User ? r.User.username : "Anonim" %></strong> - ⭐ <%= r.rating %>/5
-        <p><%= r.comment %></p>
-        <small><%= new Date(r.createdAt).toLocaleDateString('tr-TR') %></small>
+    <h4>Fotoğraflar</h4>
+    <% if (hotel.hotel_images && hotel.hotel_images.length > 0) { %>
+      <div style="display: flex; gap: 10px;">
+        <% hotel.hotel_images.forEach(img => { %>
+          <img src="<%= img.image_path %>" alt="otel foto" width="200">
+        <% }) %>
       </div>
-    <% }) %>
-  <% } else { %>
-    <p>Henüz yorum yapılmamış.</p>
-  <% } %>
+    <% } else { %>
+      <p>📷 Görsel bulunamadı.</p>
+    <% } %>
 
+    <hr>
+
+    <p><strong>Check-in:</strong> <%= hotel.check_in_time %> | <strong>Check-out:</strong> <%= hotel.check_out_time %></p>
+    <p><strong>Maksimum Kişi:</strong> <%= hotel.max_guests %> | <strong>Oda:</strong> <%= hotel.room_count %></p>
+
+    <% if (hotel.highlight_1 || hotel.highlight_2) { %>
+      <h4>Öne Çıkan Özellikler</h4>
+      <ul>
+        <% if (hotel.highlight_1) { %><li><%= hotel.highlight_1 %></li><% } %>
+        <% if (hotel.highlight_2) { %><li><%= hotel.highlight_2 %></li><% } %>
+      </ul>
+    <% } %>
+
+    <h4>Olanaklar</h4>
+    <ul>
+      <% for (const [key, label] of Object.entries(allFeatures)) { %>
+        <% if (hotel[key]) { %>
+          <li>✅ <%= label %></li>
+        <% } %>
+      <% } %>
+    </ul>
+
+    <form method="GET" action="/kiraci/rezervasyon/<%= hotel.id %>">
+      <button type="submit">Rezervasyon Yap</button>
+    </form>
+
+    <hr>
+
+    <h3>Yorum Yap</h3>
+    <% if (user) { %>
+      <form method="POST" action="/kiraci/yorum-ekle">
+        <input type="hidden" name="hotel_id" value="<%= hotel.id %>">
+        <input type="hidden" name="user_id" value="<%= user.id %>">
+        <label for="rating">Puan (1-5):</label>
+        <select name="rating" required>
+          <% for (let i = 1; i <= 5; i++) { %>
+            <option value="<%= i %>"><%= i %></option>
+          <% } %>
+        </select><br>
+        <textarea name="comment" rows="3" cols="40" placeholder="Yorumunuz..." required></textarea><br>
+        <button type="submit">Gönder</button>
+      </form>
+    <% } else { %>
+      <p>Yorum yapabilmek için <a href="/login">giriş yapın</a>.</p>
+    <% } %>
+
+    <h3>Yorumlar</h3>
+    <% if (reviews && reviews.length > 0) { %>
+      <% reviews.forEach(r => { %>
+        <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+          <strong><%= r.User ? r.User.username : "Anonim" %></strong>
+          <div>
+            <% for (let i = 0; i < r.rating; i++) { %> ⭐ <% } %> (<%= r.rating %>/5)
+          </div>
+          <p><%= r.comment %></p>
+          <small><%= new Date(r.createdAt).toLocaleDateString('tr-TR') %></small>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>Henüz yorum yapılmamış.</p>
+    <% } %>
+
+  </div>
 </body>
 </html>
-

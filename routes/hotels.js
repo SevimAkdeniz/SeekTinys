@@ -169,7 +169,10 @@ router.post("/duzenle/:id", async (req, res) => {
   const toBool = (val) => val === 'on';
 
   try {
-    const { name, location, price, description, distance_to_center, check_in_time, check_out_time, max_guests, room_count } = req.body;
+    const {
+      name, location, price, description, distance_to_center,
+      check_in_time, check_out_time, max_guests, room_count
+    } = req.body;
 
     await Hotel.update(
       {
@@ -193,17 +196,24 @@ router.post("/duzenle/:id", async (req, res) => {
         max_guests,
         room_count
       },
-      {
-        where: { id: req.params.id }
-      }
+      { where: { id: req.params.id } }
     );
 
+    // 👇 Sadece admin ise admin paneline yönlendir
+    const isAdmin = req.session?.user?.role === 'admin';
+    if (isAdmin) {
+      return res.redirect('/admin');
+    }
+
+    // 👤 Otel sahibi ise kendi ilanlarına yönlendir
     res.redirect("/host/ilanlarim");
+
   } catch (err) {
     console.error("Güncelleme hatası:", err);
     res.status(500).send("Bir hata oluştu.");
   }
 });
+
 
 
 
