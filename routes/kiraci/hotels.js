@@ -4,6 +4,10 @@ const { Hotel, HotelImage, Review, User } = require('../../models');
 const { Reservation } = require('../../models');
 const sequelize = require('../../config/database');
 const AvailableDate = require('../../models/availableDate');
+const Payment = require('../../models/payments');
+
+
+
 
 
 
@@ -56,6 +60,7 @@ router.get('/hotels', async (req, res) => {
     // 2️⃣ İlk olarak tüm eşleşen otelleri çek
     let hotels = await Hotel.findAll({
       where: whereClause,
+      where: { is_active: true },
       include: [HotelImage]
     });
     if ((start_date && !end_date) || (!start_date && end_date)) {
@@ -121,7 +126,20 @@ router.post('/yorum-ekle', async (req, res) => {
   const { comment, rating, hotel_id, user_id } = req.body;
 
   try {
+    // Kullanıcının bu otele onaylı rezervasyonu var mı?
+    const confirmed = await Reservation.findOne({
+      where: {
+        user_id,
+        hotel_id,
+        status: 'confirmed'
+      }
+    });
 
+    if (!confirmed) {
+      return res.status(403).send("❌ Onaylı rezervasyonunuz olmadan yorum yapamazsınız.");
+    }
+
+    // SP ile yorumu ekle
     await sequelize.query(
       'CALL sp_add_review_and_update_score(:userId, :hotelId, :rating, :comment)',
       {
@@ -133,12 +151,14 @@ router.post('/yorum-ekle', async (req, res) => {
         }
       }
     );
+
     res.redirect('/kiraci/hotels/' + hotel_id);
   } catch (err) {
     console.error("Yorum eklenirken hata:", err);
     res.status(500).send("Yorum eklenemedi.");
   }
 });
+
 
 router.get('/rezervasyon/:hotelId', async (req, res) => {
   const hotel = await Hotel.findByPk(req.params.hotelId);
@@ -363,18 +383,33 @@ router.post('/odeme/:reservationId', async (req, res) => {
   const reservationId = req.params.reservationId;
 
   try {
-    // (Gerçek senaryoda buraya ödeme API'si entegre edilir)
+    const reservation = await Reservation.findByPk(reservationId, {
+      include: [Hotel]
+    });
+
+    if (!reservation) return res.status(404).send("Rezervasyon bulunamadı.");
+
+    const days = Math.ceil(
+      (new Date(reservation.end_date) - new Date(reservation.start_date)) / (1000 * 60 * 60 * 24)
+    );
+    const totalPrice = days * reservation.Hotel.price_per_night;
+
+    // 💳 (Gerçek senaryoda burada ödeme API'si çağrılır)
     console.log("Ödeme alındı:", card_number, card_name);
 
-    // ✅ Ödeme başarılıysa güncelle
+    // ✅ 1. Rezervasyonu güncelle
     await Reservation.update(
-      {
-        is_paid: true // ← burası eklendi
-      },
-      {
-        where: { id: reservationId }
-      }
+      { is_paid: true },
+      { where: { id: reservationId } }
     );
+
+    // ✅ 2. Ödeme tablosuna kayıt ekle
+    await Payment.create({
+      reservation_id: reservationId,
+      amount: totalPrice,
+      method: "Kart", // istersen burada kullanıcıdan alınabilir
+      status: "completed"
+    });
 
     res.send("✅ Ödeme başarılı! Rezervasyon onaylandı.");
   } catch (err) {

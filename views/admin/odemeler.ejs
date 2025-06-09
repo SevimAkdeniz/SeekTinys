@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ödeme Geçmişi</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+    <body class="admin-wrapper">
+  <h2 class="admin-title">💰 Ödeme Geçmişi</h2>
+
+  <table class="odeme-tablosu">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Kullanıcı</th>
+        <th>Otel</th>
+        <th>Tutar</th>
+        <th>Yöntem</th>
+        <th>Durum</th>
+        <th>Tarih</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% odemeler.forEach((odeme, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= odeme.Reservation.User?.username || 'Bilinmiyor' %></td>
+          <td><%= odeme.Reservation.Hotel?.name || 'Bilinmiyor' %></td>
+          <td>₺<%= odeme.amount %></td>
+          <td><%= odeme.method %></td>
+          <td><%= odeme.status %></td>
+          <td><%= odeme.createdAt.toLocaleDateString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <div class="admin-btn-container">
+    <a href="/admin" class="admin-btn">⬅️ Admin Paneline Dön</a>
+  </div>
+</body>
+
+ 
+</body>
+</html>

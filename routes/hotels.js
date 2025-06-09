@@ -1,13 +1,14 @@
 
 const express = require('express');
 const router = express.Router();
-const Hotel = require('../models/hotels');
-const HotelImage = require('../models/hotelImage')
 
-const Reservation = require('../models/reservation');
-const User = require('../models/users');
 const AvailableDate = require('../models/availableDate');
 
+const Reservation = require('../models/reservation');
+
+const isAuthenticated = require('../middlewares/auth'); // yol dosya yapına göre değişebilir
+
+const { Hotel, Review, HotelImage, User } = require('../models');
 
 
 
@@ -66,7 +67,7 @@ router.post('/add', upload.single('image'), async (req, res) => {
       has_air_conditioning, is_all_inclusive
     } = req.body;
 
-    const imagePath = req.file ? req.file.path.replace("public\\", "") : null;
+    const imagePath = req.file ? req.file.path.replace(/\\/g, "/").replace("public/", "") : null;
 
     const hotel = await Hotel.create({
       user_id: userId, // ← Burada aktif kullanıcıyı kullanıyoruz
@@ -102,11 +103,11 @@ router.post('/add', upload.single('image'), async (req, res) => {
 
     const { available_start_date, available_end_date } = req.body;
 
-  await AvailableDate.create({
-    hotel_id: hotel.id, // oteli kaydettikten sonra dönen id
-    start_date: available_start_date,
-    end_date: available_end_date
-  });
+    await AvailableDate.create({
+      hotel_id: hotel.id, // oteli kaydettikten sonra dönen id
+      start_date: available_start_date,
+      end_date: available_end_date
+    });
 
 
     res.redirect('/host/ilanlarim');
@@ -123,7 +124,8 @@ router.get("/ilanlarim", async (req, res) => {
     if (!userId) return res.redirect('/login');
 
     const ilanlar = await Hotel.findAll({
-      where: { user_id: userId }, // Geçici olarak sabit, sonra req.session.user.id yapılır
+      where: { user_id: userId },
+      include: [HotelImage] // Geçici olarak sabit, sonra req.session.user.id yapılır
     });
 
     res.render("host/ilanlarim", { ilanlar });
@@ -153,17 +155,16 @@ router.post("/sil/:id", async (req, res) => {
 router.get("/duzenle/:id", async (req, res) => {
   try {
     const ilan = await Hotel.findByPk(req.params.id);
+    const tarih = await AvailableDate.findOne({ where: { hotel_id: req.params.id } });
 
     if (!ilan) return res.status(404).send("İlan bulunamadı.");
 
-    res.render("host/duzenle-hotel", { ilan });
+    res.render("host/duzenle-hotel", { ilan, tarih });
   } catch (err) {
     console.error("Düzenleme sayfası hatası:", err);
     res.status(500).send("Bir hata oluştu.");
   }
 });
-
-
 
 router.post("/duzenle/:id", async (req, res) => {
   const toBool = (val) => val === 'on';
@@ -171,41 +172,49 @@ router.post("/duzenle/:id", async (req, res) => {
   try {
     const {
       name, location, price, description, distance_to_center,
-      check_in_time, check_out_time, max_guests, room_count
+      check_in_time, check_out_time, max_guests, room_count,
+      available_start_date, available_end_date
     } = req.body;
 
-    await Hotel.update(
-      {
-        has_wifi: toBool(req.body.has_wifi),
-        has_parking: toBool(req.body.has_parking),
-        pet_friendly: toBool(req.body.pet_friendly),
-        has_pool: toBool(req.body.has_pool),
-        has_spa: toBool(req.body.has_spa),
-        has_gym: toBool(req.body.has_gym),
-        has_sea_view: toBool(req.body.has_sea_view),
-        has_balcony: toBool(req.body.has_balcony),
-        has_air_conditioning: toBool(req.body.has_air_conditioning),
-        is_all_inclusive: toBool(req.body.is_all_inclusive),
-        name,
-        location,
-        price_per_night: price,
-        description,
-        distance_to_center,
-        check_in_time,
-        check_out_time,
-        max_guests,
-        room_count
-      },
-      { where: { id: req.params.id } }
-    );
+    // 🔁 1. Tarih güncelleme (AvailableDate tablosunda)
+    await AvailableDate.update({
+      start_date: available_start_date,
+      end_date: available_end_date
+    }, {
+      where: { hotel_id: req.params.id }
+    });
 
-    // 👇 Sadece admin ise admin paneline yönlendir
+    // 🏠 2. Otel bilgilerini güncelle
+    await Hotel.update({
+      has_wifi: toBool(req.body.has_wifi),
+      has_parking: toBool(req.body.has_parking),
+      pet_friendly: toBool(req.body.pet_friendly),
+      has_pool: toBool(req.body.has_pool),
+      has_spa: toBool(req.body.has_spa),
+      has_gym: toBool(req.body.has_gym),
+      has_sea_view: toBool(req.body.has_sea_view),
+      has_balcony: toBool(req.body.has_balcony),
+      has_air_conditioning: toBool(req.body.has_air_conditioning),
+      is_all_inclusive: toBool(req.body.is_all_inclusive),
+      name,
+      location,
+      price_per_night: price,
+      description,
+      distance_to_center,
+      check_in_time,
+      check_out_time,
+      max_guests,
+      room_count
+    }, {
+      where: { id: req.params.id }
+    });
+
+    // 👥 Rol kontrolü
     const isAdmin = req.session?.user?.role === 'admin';
     if (isAdmin) {
       return res.redirect('/admin');
     }
 
-    // 👤 Otel sahibi ise kendi ilanlarına yönlendir
     res.redirect("/host/ilanlarim");
 
   } catch (err) {
@@ -214,14 +223,9 @@ router.post("/duzenle/:id", async (req, res) => {
   }
 });
 
-
-
-
-
-
 router.get("/rezervasyonlar", async (req, res) => {
   try {
-     const userId = req.session.user?.id;
+    const userId = req.session.user?.id;
 
     if (!userId) return res.redirect('/login'); // 👈 Giriş yapan otel sahibinin ID'si (ileride: req.session.user.id)
 
@@ -244,6 +248,43 @@ router.get("/rezervasyonlar", async (req, res) => {
   }
 });
 
+
+router.get('/hotel-detay/:id', async (req, res) => {
+  try {
+    const hotel = await Hotel.findByPk(req.params.id, {
+      include: [
+        HotelImage,
+        {
+          model: Review,
+          include: [User] // 👈 YORUM sahibini getiriyoruz
+        }
+      ]
+    });
+
+    if (!hotel) return res.status(404).send("Otel bulunamadı");
+
+    const allFeatures = {
+      has_pool: "Havuz",
+      has_wifi: "Wi-Fi",
+      has_parking: "Otopark",
+      pet_friendly: "Evcil Hayvan Dostu",
+      has_spa: "Spa",
+      has_gym: "Spor Salonu",
+      has_sea_view: "Deniz Manzarası",
+      has_balcony: "Balkon",
+      has_air_conditioning: "Klima",
+      is_all_inclusive: "Her Şey Dahil"
+    };
+
+    res.render("host/hotel-detail", {
+      hotel,
+      allFeatures
+    });
+  } catch (err) {
+    console.error("Hotel detay hatası:", err);
+    res.status(500).send("Bir hata oluştu.");
+  }
+});
 
 // Sadece "/rezervasyonlar/sil/:id" → çünkü zaten /host prefix'i var
 router.get("/rezervasyonlar/sil/:id", async (req, res) => {
@@ -294,8 +335,70 @@ router.post("/rezervasyonlar/onayla/:id", async (req, res) => {
 
 
 
+router.get('/owner/profile', isAuthenticated, async (req, res) => {
+  const ownerID = req.session.userID;
+
+  const user = await User.findByPk(ownerID);
+  if (!user || user.role !== 'owner') return res.redirect('/');
+
+  const hotels = await Hotel.findAll({ where: { user_id: ownerID } });
+  const hotelIDs = hotels.map(h => h.id);
+
+  const activeHotels = hotels.length;
+
+  const totalReservations = await Reservation.count({
+    where: { HotelID: { [Op.in]: hotelIDs } }
+  });
+
+  const totalReviews = await Review.count({
+    where: { HotelID: { [Op.in]: hotelIDs } }
+  });
+
+  // Hotel modelindeki review_score değerlerinin ortalaması alınır
+  const totalRating = hotels.reduce((sum, hotel) => {
+    return sum + (parseFloat(hotel.review_score) || 0);
+  }, 0);
+
+  const averageRating = hotels.length > 0
+    ? (totalRating / hotels.length).toFixed(2)
+    : "0.00";
+
+  res.render('profil', {
+    user,
+    stats: {
+      activeHotels,
+      totalReservations,
+      totalReviews,
+      averageRating
+    }
+  });
+});
 
 
 
+router.post('/aktif-yap/:id', async (req, res) => {
+  const hotelId = req.params.id;
+
+  try {
+    await Hotel.update({ is_active: true }, { where: { id: hotelId } });
+    res.redirect('/host/ilanlarim'); // ya da kendi yönlendirme yolun
+  } catch (err) {
+    console.error("Aktif yaparken hata:", err);
+    res.status(500).send("Aktif yapılırken hata oluştu.");
+  }
+});
+
+// Oteli pasif yap
+router.post('/pasif-yap/:id', async (req, res) => {
+  const hotelId = req.params.id;
+
+  try {
+    await Hotel.update({ is_active: false }, { where: { id: hotelId } });
+    res.redirect('/host/ilanlarim');
+  } catch (err) {
+    console.error("Pasif yaparken hata:", err);
+    res.status(500).send("Pasif yapılırken hata oluştu.");
+  }
+});
 
 module.exports = router;

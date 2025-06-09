@@ -191,6 +191,8 @@ input[type="file"] {
 input[type="text"],
 input[type="number"],
 input[type="time"],
+input[type="date"],
+
 select,
 textarea {
   padding: 10px;
@@ -206,6 +208,8 @@ textarea {
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="time"]:focus,
+input[type="date"]:focus,
+input:focus,
 select:focus,
 textarea:focus {
   border-color: #4da3ff;
@@ -219,3 +223,4 @@ textarea:focus {
   border: 1px solid #cde3ff;
   border-radius: 12px;
 }
+

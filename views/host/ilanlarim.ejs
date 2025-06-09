@@ -18,11 +18,14 @@
         <div class="ilanlar-wrapper">
             <% ilanlar.forEach(ilan=> { %>
                 <div class="ilan-kart">
-                    <% if (ilan.image_path) { %>
-                        <img src="/uploads/<%= ilan.image_path %>" alt="Tiny House">
+                    <% if (ilan.HotelImages && ilan.HotelImages.length> 0) { %>
+                        <img src="/<%= ilan.HotelImages[0].image_url.replace(/\\/g, '/') %>" alt="Otel Foto">
                         <% } else { %>
                             <div class="no-image">Görsel yok</div>
                             <% } %>
+
+
+
 
                                 <div class="ilan-bilgi">
                                     <h3>
@@ -44,10 +47,20 @@
 
                                     <div class="butonlar">
                                         <a href="/host/duzenle/<%= ilan.id %>"><button>Düzenle</button></a>
-                                        <form action="/host/sil/<%= ilan.id %>" method="POST">
-                                            <button type="submit"
-                                                onclick="return confirm('Bu ilanı silmek istediğinize emin misiniz?')">Sil</button>
-                                        </form>
+                                        <a href="/host/hotel-detay/<%= ilan.id %>">İlanı gör</a>
+                                        <% if (ilan.is_active) { %>
+                                            <form action="/host/pasif-yap/<%= ilan.id %>" method="POST">
+                                                <button style="background-color: #f59e0b;">⏸️ Pasife Çek</button>
+                                            </form>
+                                            <% } else { %>
+                                                <form action="/host/aktif-yap/<%= ilan.id %>" method="POST">
+                                                    <button style="background-color: #10b981;">✅ Aktif Yap</button>
+                                                </form>
+                                                <% } %>
+                                                    <form action="/host/sil/<%= ilan.id %>" method="POST">
+                                                        <button type="submit"
+                                                            onclick="return confirm('Bu ilanı silmek istediğinize emin misiniz?')">Sil</button>
+                                                    </form>
                                     </div>
                                 </div>
                 </div>

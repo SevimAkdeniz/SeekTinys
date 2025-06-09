@@ -7,162 +7,107 @@
 <body>
     <%-include('./inc/nav.ejs')%>
 
-    <div id="image">
-        <section class="index_top">
-            
-            <div id="line">
-                <p id="text1">Hayattan kaçmak için değil hayatı kaçırmamak için</p>
-                <p id="text2">Seeek Tiny's sizinle</p>
+        <div id="image">
+            <section class="index_top">
+
+                <div id="line">
+                    <p id="text1">Hayattan kaçmak için değil hayatı kaçırmamak için</p>
+                    <p id="text2">Seeek Tiny's sizinle</p>
 
 
-            </div>
+                </div>
 
-            <form class="search-bar" action="#" method="get">
-                <div id="seach-bar">
-                    
+                <form class="search-bar" action="#" method="get">
+                    <div id="seach-bar">
+
                         <div class="search-item">
-                        <span class="search-label">Going to</span>
-                        <input type="text" name="destination" placeholder="Destination, property or address" required>
+                            <span class="search-label">Going to</span>
+                            <input type="text" name="destination" placeholder="Destination, property or address"
+                                required>
                         </div>
                         <div class="search-item">
-                        <span class="search-label">Check-in</span>
-                        <input type="date" name="checkin" required>
+                            <span class="search-label">Check-in</span>
+                            <input type="date" name="checkin" required>
                         </div>
                         <div class="search-item">
-                        <span class="search-label">Check-out</span>
-                        <input type="date" name="checkout" required>
+                            <span class="search-label">Check-out</span>
+                            <input type="date" name="checkout" required>
                         </div>
                         <div class="search-item">
-                        <span class="search-label">Travelers</span>
-                        <input type="text" name="travelers" placeholder="2 adults, 1 room" required>
+                            <span class="search-label">Travelers</span>
+                            <input type="text" name="travelers" placeholder="2 adults, 1 room" required>
                         </div>
                         <div class="">
                             <button type="submit" class="search-btn">
                                 <i class="fa fa-search"></i>
-                            </button>  
+                            </button>
                         </div>
-                    
-                    
-                    
-                    
-                </div>
-            </form>
-
-         
-
-        </section>
-    </div>
 
 
-   
-    <div class="index-hotels">
-        <div>
-            <h1>Tarihi yaklaşan otel fırsatları</h1>
+
+
+                    </div>
+                </form>
+
+
+
+            </section>
         </div>
-        <div id="cards">
-            <div class="cards">
-                <div>
-                    <div class="img-part">
-                        <img src="/public/images/image1.jpg" alt="">
 
 
-    
-                    </div>
-                    <div class="name-part">
-                        <h2>Nehir Resort Otel</h1>
-                            <div>
-                                <p>6.3 - Fena Değil</p>
-                                <p> <i class="fa-solid fa-location-dot"></i> Antalya</p>
-                            </div>
-    
-    
-                    </div>
-                    <div class="price-part">
-    
-                        <p class="price">₺4.732</p>
-                        <div>
-                            <p>/gece</p>
-                            <p> 25 Nis - 30 Nis</p>
-    
-    
-    
-                        </div>
-                        <button>Fırsatı görün</button>
-    
-    
-                    </div>
-                 
-                </div>
-            </div>
-    
-            <div class="cards">
-                <div>
-                    <div class="img-part">
-                        <img src="images/coast-4478424_1920.jpg" alt="">
-    
-                    </div>
-                    <div class="name-part">
-                        <h2>Nehir Resort Otel</h1>
-                            <div>
-                                <p>6.3 - Fena Değil</p>
-                                <p> <i class="fa-solid fa-location-dot"></i> Antalya</p>
-                            </div>
-    
-    
-                    </div>
-                    <div class="price-part">
-    
-                        <p class="price">₺4.732</p>
-                        <div>
-                            <p>/gece</p>
-                            <p> 25 Nis - 30 Nis</p>
-    
-    
-    
-                        </div>
-                        <button>Fırsatı görün</button>
-    
-    
-                    </div>
-                </div>
-            </div>
-    
-           
-            <div class="cards">
-                <div>
-                    <div class="img-part">
-                        <img src="images/coast-4478424_1920.jpg" alt="">
-    
-                    </div>
-                    <div class="name-part">
-                        <h2>Nehir Resort Otel</h1>
-                            <div>
-                                <p>6.3 - Fena Değil</p>
-                                <p> <i class="fa-solid fa-location-dot"></i> Antalya</p>
-                            </div>
-    
-    
-                    </div>
-                    <div class="price-part">
-    
-                        <p class="price">₺4.732</p>
-                        <div>
-                            <p>/gece</p>
-                            <p> 25 Nis - 30 Nis</p>
-    
-    
-    
-                        </div>
-                        <button>Fırsatı görün</button>
-    
-    
-                    </div>
-                </div>
+
+        <div class="index-hotels">
+            <div>
+                <h1>Tarihi yaklaşan otel fırsatları</h1>
             </div>
 
+            <div id="cards">
+                <% bestHotels.forEach(hotel=> { %>
+                    <div class="cards">
+                        <div>
+                            <div class="img-part">
+<img src="/uploads/<%= hotel.HotelImages && hotel.HotelImages.length > 0 ? hotel.HotelImages[0].image_url : 'images/default.jpg' %>" alt="">
+                            </div>
+
+                            <div class="name-part">
+                                <h2>
+                                    <%= hotel.name %>
+                                </h2>
+                                <div>
+                                    <p>
+                                        <%= hotel.review_score %> -
+                                            <% if (hotel.review_score>= 4) { %>Harika
+                                                <% } else if (hotel.review_score>= 3) { %>Fena Değil
+                                                    <% } else { %>Düşük
+                                                        <% } %>
+                                    </p>
+                                    <p><i class="fa-solid fa-location-dot"></i>
+                                        <%= hotel.location %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="price-part">
+                                <p class="price">₺<%= hotel.price_per_night %>
+                                </p>
+                                <div>
+                                    <p>/gece</p>
+                                    <p>25 Nis - 30 Nis</p> <!-- bu tarih sabit yazılmış, istersen dinamikleştir -->
+                                </div>
+                                <a href="/kiraci/hotels/<%= hotel.id %>">
+                                    <button>Fırsatı görün</button>
+                                </a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
         </div>
-      
-    </div>
+
+
+
 
 </body>
 

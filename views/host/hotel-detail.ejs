@@ -59,45 +59,29 @@
       <% } %>
     </ul>
 
-    <form method="GET" action="/kiraci/rezervasyon/<%= hotel.id %>">
-      <button type="submit">Rezervasyon Yap</button>
+    <form method="GET" action="/host/duzenle/<%= hotel.id %>">
+      <button type="submit">Düzenle</button>
     </form>
 
     <hr>
 
-    <h3>Yorum Yap</h3>
-    <% if (user) { %>
-      <form method="POST" action="/kiraci/yorum-ekle">
-        <input type="hidden" name="hotel_id" value="<%= hotel.id %>">
-        <input type="hidden" name="user_id" value="<%= user.id %>">
-        <label for="rating">Puan (1-5):</label>
-        <select name="rating" required>
-          <% for (let i = 1; i <= 5; i++) { %>
-            <option value="<%= i %>"><%= i %></option>
-          <% } %>
-        </select><br>
-        <textarea name="comment" rows="3" cols="40" placeholder="Yorumunuz..." required></textarea><br>
-        <button type="submit">Gönder</button>
-      </form>
-    <% } else { %>
-      <p>Yorum yapabilmek için <a href="/login">giriş yapın</a>.</p>
-    <% } %>
+   
 
     <h3>Yorumlar</h3>
-    <% if (reviews && reviews.length > 0) { %>
-      <% reviews.forEach(r => { %>
-        <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
-          <strong><%= r.User ? r.User.username : "Anonim" %></strong>
-          <div>
-            <% for (let i = 0; i < r.rating; i++) { %> ⭐ <% } %> (<%= r.rating %>/5)
-          </div>
-          <p><%= r.comment %></p>
-          <small><%= new Date(r.createdAt).toLocaleDateString('tr-TR') %></small>
-        </div>
-      <% }) %>
-    <% } else { %>
-      <p>Henüz yorum yapılmamış.</p>
-    <% } %>
+    <% if (hotel.Reviews && hotel.Reviews.length > 0) { %>
+  <% hotel.Reviews.forEach(r => { %>
+    <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+      <strong><%= r.User ? r.User.username : "Anonim" %></strong>
+      <span style="float: right; font-size: 0.9em; color: gray;">
+        <%= new Date(r.createdAt).toLocaleDateString("tr-TR") %>
+      </span>
+      <p><%= r.comment %></p>
+      <p>Puan: <%= r.rating %>/5</p>
+    </div>
+  <% }) %>
+<% } else { %>
+  <p>Bu otele henüz yorum yapılmamış.</p>
+<% } %>
 
   </div>
 </body>

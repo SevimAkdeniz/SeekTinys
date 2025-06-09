@@ -47,4 +47,5 @@ const Reservation = sequelize.define("Reservation", {
 
 
 
+
 module.exports = Reservation;

@@ -1,7 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const Hotel = require("./hotels");
-const Reservation = require("./reservation")
 
 const bcrypt = require("bcrypt");
 
@@ -16,6 +15,10 @@ const User = sequelize.define("User", {
         allowNull: false,
         unique: true
     },
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -25,10 +28,10 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false
     },
-    role:{
+    role: {
         type: DataTypes.STRING,
         allowNull: false
-        
+
 
     },
     resetCode: {
@@ -43,9 +46,9 @@ const User = sequelize.define("User", {
         type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: false,
-         // ❗ MySQL'deki gerçek sütun adı küçük olabilir
-      }
-      
+        // ❗ MySQL'deki gerçek sütun adı küçük olabilir
+    }
+
 }, {
     hooks: {
         beforeCreate: async (user) => {

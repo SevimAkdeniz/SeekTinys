@@ -9,6 +9,10 @@
         <div id="login_bg">
             <div id="signup_page" class="login_page">
                 <h1>Hesap Oluştur</h1>
+        <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+  <div class="error-box"><%= error_msg %></div>
+<% } %>
+
 
                 <div id="signup_form">
                     <form action="/signup" method="post">

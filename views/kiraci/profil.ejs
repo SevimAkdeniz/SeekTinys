@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kiracı Profil</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4;
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            max-width: 700px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f2937;
+        }
+
+        .info {
+            margin: 15px 0;
+            font-size: 16px;
+        }
+
+        .info strong {
+            width: 250px;
+            display: inline-block;
+            color: #374151;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .buttons a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .buttons a:hover {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>👤 Kiracı Profilim</h1>
+
+        <div class="info"><strong>Ad Soyad:</strong>
+            <%= user.username %>
+        </div>
+        <div class="info"><strong>E-posta:</strong>
+            <%= user.email %>
+        </div>
+        <div class="info"><strong>Kayıt Tarihi:</strong>
+            <%= user.createdAt.toLocaleDateString('tr-TR') %>
+        </div>
+
+        <hr>
+
+        <div class="info"><strong>Toplam Rezervasyon:</strong>
+            <%= stats.totalReservations %>
+        </div>
+        <div class="info"><strong>Onaylanan Rezervasyon:</strong>
+            <%= stats.confirmedReservations %>
+        </div>
+        <div class="info"><strong>Reddedilen Rezervasyon:</strong>
+            <%= stats.cancelledReservations %>
+        </div>
+        <div class="info"><strong>Yorum Sayısı:</strong>
+            <%= stats.totalReviews %>
+        </div>
+
+        <div class="buttons">
+            <a href="/">🏠 Ana Sayfa</a>
+            <a href="/kiraci/hotels">🏨 Otellere Göz At</a>
+            <a href="/kiraci/rezervasyonlarim">📅 Rezervasyonlarım</a>
+            <a href="/logout">🚪 Çıkış Yap</a>
+
+        </div>
+    </div>
+</body>
+
+</html>

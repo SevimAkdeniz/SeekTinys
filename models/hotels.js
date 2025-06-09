@@ -116,7 +116,11 @@
     highlight_2: {
       type: DataTypes.STRING,
       allowNull: true
-    }
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     
 
   }, {

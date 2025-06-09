@@ -31,7 +31,7 @@ const Review = sequelize.define('Review', {
   },
 }, {
   tableName: 'Reviews',
-  timestamps: false,
+  timestamps: true,
 });
 
 Review.belongsTo(User, { foreignKey: 'user_id' });

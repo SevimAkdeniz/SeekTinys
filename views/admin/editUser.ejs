@@ -65,21 +65,24 @@
 </head>
 <body>
   <form action="/admin/edit-user/<%= user.id %>" method="POST">
-    <h1>👤 Kullanıcıyı Düzenle</h1>
+  <h1>👤 Kullanıcıyı Düzenle</h1>
 
-    <label>Kullanıcı Adı:</label>
-    <input type="text" name="username" value="<%= user.username %>" required />
+  <label>Kullanıcı Adı:</label>
+  <input type="text" name="username" value="<%= user.username %>" required />
 
-    <label>Email:</label>
-    <input type="email" name="email" value="<%= user.email %>" required />
+  <label>Email:</label>
+  <input type="email" name="email" value="<%= user.email %>" required />
 
-    <label>Rol:</label>
-    <select name="role">
-      <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
-      <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
-    </select>
+  <label>Rol:</label>
+  <select name="role">
+    <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+    <option value="owner" <%= user.role === 'owner' ? 'selected' : '' %>>Owner</option>
+    <option value="customer" <%= user.role === 'customer' ? 'selected' : '' %>>Customer</option>
+  </select>
 
-    <button type="submit">💾 Kaydet</button>
-  </form>
+  <button type="submit">💾 Kaydet</button>
+</form>
+
+  
 </body>
 </html>

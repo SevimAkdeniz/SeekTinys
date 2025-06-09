@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users"); // ✅ MySQL Modelini Kullan
 const bcrypt = require("bcryptjs");
+const { Op } = require("sequelize");
 
 const maxAge = 60 * 60 * 24;
 const createToken = (id) => {
@@ -14,98 +15,122 @@ const auth_login = (req, res) => {
 
 // Kullanıcı Girişi İşlemi
 const auth_login_post = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (email == "sevimakdeniz7@gmail.com" && password == "sev") {
-        req.session.user = {
-            id: 9999,
-            name: "Sevim Admin",
-            role: "admin"
-        };
+  // Admin override
+  if (email === "sevimakdeniz7@gmail.com" && password === "sev") {
+    req.session.user = {
+      id: 9999,
+      name: "Sevim Admin",
+      role: "admin"
+    };
+    req.session.userRole = "admin";
+    return res.redirect("/admin");
+  }
 
-        // direkt yönlendirme yerine verileri çekip doğrudan sayfayı render edelim
-        const hotels = await require('../models/hotels').findAll();
-        const users = await require('../models/users').findAll();
-        const reservations = await require('../models/reservation').findAll({
-            include: [require('../models/users'), require('../models/hotels')]
-        });
+  try {
+    const user = await User.findOne({ where: { email } });
+    console.log("USER:", user); // Debug log
 
-        return res.redirect("/admin");
+    // ⛔ null kontrolü
+    if (!user || !user.id) {
+      return res.render("login", { error_msg: "E-posta bulunamadı." });
     }
 
+    // 🔐 Şifre kontrolü
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.render("login", { error_msg: "Şifre yanlış." });
+    }
 
+    // 🟡 Pasif kullanıcı kontrolü
+    if (!user.is_active) {
+      return res.render("login", { error_msg: "Hesabınız pasif." });
+    }
 
- else {
-    try {
-        // ✅ MySQL için Sequelize findOne kullanımı
-        const user = await User.findOne({ where: { email } });
+    // ✅ Her şey doğruysa session yaz
+    const safeRole = user?.role || "customer";
 
-if (!user) {
-    console.log("Kullanıcı bulunamadı");
+    req.session.user = {
+      id: user.id,
+      name: user.username,
+      role: safeRole
+    };
 
+    req.session.userRole = safeRole;
 
+    const token = createToken(user.id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 
-}
+    res.redirect("/");
 
-// 📌 Şifre karşılaştırma (bcrypt ile)
-const isMatch = await bcrypt.compare(password, user.password);
-if (!isMatch) {
-    console.log("Şifre yanlış");
-    return res.status(400).json({ message: "Şifre yanlış" });
-}
-// Başarılı girişte
-req.session.user = {
-    id: user.id,
-    name: user.name,
-    role: user.role
+  } catch (err) {
+    console.error("🔥 Giriş işlemi hatası:", err);
+    res.status(500).render("login", { error_msg: "Sunucu hatası." });
+  }
 };
 
 
-// ✅ JWT Token oluştur
-const token = createToken(user.id);
-res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
-res.redirect("/");
-
-        } catch (e) {
-    console.log(e);
-    res.status(500).json({ message: "Sunucu hatası" });
-}
-
-    }
 
 
-};
 
 // Kayıt Sayfasını Göster
 const auth_signup = (req, res) => {
     res.render("signup");
 };
 
-// Kullanıcı Kaydı İşlemi
+
+
 const auth_signup_post = async (req, res) => {
-    try {
-        const { username, email, password, role } = req.body;
+  try {
+    const { username, email, password, role } = req.body;
 
-        // 📌 Şifreyi hash'le
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // ✅ MySQL için kullanıcı oluşturma
-        const newUser = await User.create({
-            username,
-            email,
-            role,
-            password: hashedPassword,
-
-        });
-
-        res.redirect("/login");
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Kayıt işlemi başarısız" });
+    // 🔒 Eksik bilgi kontrolü
+    if (!username || !email || !password || !role) {
+      return res.render("signup", { error_msg: "Tüm alanları doldurmalısınız." });
     }
-};
 
+    // 🔍 Kullanıcı adı veya e-mail var mı kontrol et
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [
+          { email },
+          { username }
+        ]
+      }
+    });
+
+    if (existingUser) {
+      const isEmailTaken = existingUser.email === email;
+      const isUsernameTaken = existingUser.username === username;
+
+      let msg = isEmailTaken ? "Bu e-posta zaten kayıtlı." :
+                isUsernameTaken ? "Bu kullanıcı adı zaten alınmış." :
+                "Kullanıcı zaten mevcut.";
+
+      return res.render("signup", { error_msg: msg });
+    }
+
+    // ✅ Şifreyi hashle
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ Kullanıcı oluştur
+    await User.create({
+      username,
+      email,
+      role,
+      password: hashedPassword,
+      is_active: true,
+      resetCodeAttempts: 0
+    });
+
+    return res.redirect("/login");
+
+  } catch (err) {
+    console.error("❌ Kayıt sırasında hata:", err);
+    return res.status(500).render("signup", { error_msg: "Sunucu hatası." });
+  }
+};
 module.exports = {
     auth_login,
     auth_signup,

@@ -46,7 +46,7 @@
           <div class="time-section">
             <div>
               <label style="color: rgb(65, 65, 65); padding-bottom: 0.3rem;">Giriş Saati:</label>
-              <input type="time" name="check_in_time"  style="width: 170px;" value="<%= ilan.check_in_time %>">
+              <input type="time" name="check_in_time" style="width: 170px;" value="<%= ilan.check_in_time %>">
             </div>
             <div>
               <label style="color: rgb(65, 65, 65); padding-bottom: 0.3rem;">Çıkış Saati:</label>
@@ -96,12 +96,32 @@
               </div>
             </div>
           </div>
+          <div class="availability-section">
+            <div class="time-section">
+              <div>
+                <label style="color: rgb(65, 65, 65);">Başlangıç Tarihi:</label>
+                <input type="date" name="available_start_date"
+                  value="<%= tarih?.start_date ? tarih.start_date.split('T')[0] : '' %>">
+
+
+              </div>
+              <div>
+                <label style="color: rgb(65, 65, 65);">Bitiş Tarihi:</label>
+
+                <input type="date" name="available_end_date"
+                  value="<%= tarih?.end_date ? tarih.end_date.split('T')[0] : '' %>">
+              </div>
+            </div>
+          </div>
+
+
+
 
           <!-- Gönder butonu -->
           <div class="submit-btn">
             <button type="submit">Güncelle</button>
           </div>
-              <input type="hidden" name="redirectBack" value="/admin">
+          <input type="hidden" name="redirectBack" value="/admin">
 
 
         </form>

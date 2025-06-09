@@ -1,4 +1,19 @@
 <h2>📅 Rezervasyon Yönetimi</h2>
+<form method="GET" action="/admin" class="filter-controls" style="margin-bottom: 20px;">
+  <input type="hidden" name="username" value="<%= filters?.username || '' %>">
+  <input type="hidden" name="role" value="<%= filters?.role || 'all' %>">
+  <input type="hidden" name="hotelName" value="<%= filters?.hotelName || '' %>">
+
+  <input type="text" name="resUser" placeholder="Kullanıcı adı" value="<%= filters?.resUser || '' %>">
+  <input type="text" name="resHotel" placeholder="Otel adı" value="<%= filters?.resHotel || '' %>">
+
+  <input type="date" name="startDate" value="<%= filters?.startDate || '' %>">
+  <input type="date" name="endDate" value="<%= filters?.endDate || '' %>">
+
+  <button type="submit">Filtrele</button>
+  <a href="/admin#reservations" class="btn  reset">❌ Sıfırla</a>
+
+</form>
 <table>
   <tr>
     <th>Kullanıcı</th>

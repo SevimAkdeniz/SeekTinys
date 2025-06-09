@@ -51,11 +51,12 @@
   <div class="ilanlar-wrapper">
     <% hotels.forEach(hotel => { %>
       <div class="ilan-kart">
-        <% if (hotel.hotel_images && hotel.hotel_images.length > 0) { %>
-          <img src="<%= hotel.hotel_images[0].image_path %>" alt="Otel Görseli">
-        <% } else { %>
-          <div class="no-image">Görsel yok</div>
-        <% } %>
+       <% if (hotel.HotelImages && hotel.HotelImages.length > 0) { %>
+  <img src="/<%= hotel.HotelImages[0].image_url %>" alt="Otel Görseli">
+<% } else { %>
+  <div class="no-image">Görsel yok</div>
+<% } %>
+
 
         <div class="ilan-bilgi">
           <h3><%= hotel.name %></h3>

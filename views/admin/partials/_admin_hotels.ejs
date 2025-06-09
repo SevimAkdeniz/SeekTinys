@@ -1,4 +1,14 @@
 <h2>🏠 Otel Yönetimi</h2>
+<form method="GET" action="/admin" class="filter-controls" style="margin-bottom: 20px;">
+  <input type="text" name="hotelName" placeholder="Otel adı" value="<%= filters?.hotelName || '' %>">
+  <input type="text" name="location" placeholder="Konum" value="<%= filters?.location || '' %>">
+  <input type="number" name="minPrice" placeholder="Min fiyat" value="<%= filters?.minPrice || '' %>">
+  <input type="number" name="maxPrice" placeholder="Max fiyat" value="<%= filters?.maxPrice || '' %>">
+  <button type="submit">Filtrele</button>
+    <a href="/admin#hotels" class="btn  reset">❌ Sıfırla</a>
+
+</form>
+
 <table>
   <tr>
     <th>Ad</th>
@@ -18,11 +28,14 @@
         <%= hotel.price_per_night %>
       </td>
       <td>
+        <div class="action-buttons">
         <form action="/admin/delete-hotel/<%= hotel.id %>" method="POST" class="delete-form">
           <button>🗑️</button>
-          
         </form>
-<a href="/host/duzenle/<%= hotel.id %>" class="btn primary">✏️ Düzenle</a>
+         <a href="/host/duzenle/<%= hotel.id %>" class="btn primary">✏️ Düzenle</a>
+
+         </div>
+       
 
       </td>
     </tr>

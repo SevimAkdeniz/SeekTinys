@@ -1,5 +1,20 @@
 <h2>👤 Kullanıcı Yönetimi</h2>
 
+<form method="GET" action="/admin" class="filter-controls" style="margin-bottom: 20px;">
+  <input type="text" name="username" placeholder="Kullanıcı adı" value="<%= filters?.username || '' %>">
+
+  <select id="select" name="role">
+    <option value="all" <%= !filters?.role || filters.role === 'all' ? 'selected' : '' %>>Tüm Roller</option>
+    <option value="admin" <%= filters?.role === 'admin' ? 'selected' : '' %>>Admin</option>
+    <option value="customer" <%= filters?.role === 'customer' ? 'selected' : '' %>>Kullanıcı</option>
+    <option value="owner" <%= filters?.role === 'owner' ? 'selected' : '' %>>Ev Sahibi</option>
+  </select>
+
+  <button type="submit">Filtrele</button>
+    <a href="/admin" class="btn  reset">❌ Sıfırla</a>
+
+</form>
+
 <table>
   <tr>
     <th>Kullanıcı Adı</th>
@@ -9,27 +24,28 @@
   </tr>
   <% users.forEach(user=> { %>
     <tr>
+      <td><%= user.username %></td>
+      <td><%= user.email %></td>
+      <td><%= user.role %></td>
       <td>
-        <%= user.username %>
-      </td>
-      <td>
-        <%= user.email %>
-      </td>
-      <td>
-        <%= user.role %>
-      </td>
-      <td>
-
         <div class="action-buttons">
+          
           <form action="/admin/delete-user/<%= user.id %>" method="POST" class="delete-form">
             <button class="btn danger">❌ Sil</button>
           </form>
+
           <a href="/admin/edit-user/<%= user.id %>" class="btn primary">✏️ Düzenle</a>
+
+          <form action="/admin/toggle-status/<%= user.id %>" method="POST" style="display: inline;">
+            <% if (user.is_active) { %>
+              <button class="btn warning">⛔ Pasifleştir</button>
+            <% } else { %>
+              <button class="btn success">✅ Aktifleştir</button>
+            <% } %>
+          </form>
+
         </div>
-
-
-
       </td>
     </tr>
-    <% }) %>
+  <% }) %>
 </table>
