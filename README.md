@@ -49,11 +49,19 @@ JWT_SECRET=your_secret_key
 npm start
 ```
 
-## 👤 Geliştirici
+## 👤 Geliştiriciler
 
-**Sevim Akdeniz**  
-Full Stack Developer  
-[GitHub Profilim](https://github.com/SevimAkdeniz)
+**Sevim Akdeniz**
+Full Stack Developer & Proje Lideri
+Görev: Backend, algoritma, kullanıcı yönetimi
+
+**Nehir Karabulut**
+Frontend Developer
+Görev: Arayüz tasarımı, responsive yapı
+
+**Zeynep Arda Yıldız**
+Veritabanı Uzmanı
+Görev: MySQL şeması ve veri ilişkileri
 
 ---
 
