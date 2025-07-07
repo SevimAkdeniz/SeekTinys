@@ -49,20 +49,23 @@ JWT_SECRET=your_secret_key
 npm start
 ```
 
-## 👤 Geliştiriciler
+## 👥 Proje Ekibi ve Görev Dağılımı
 
-**Sevim Akdeniz**
-Full Stack Developer & Proje Lideri
-Görev: Backend, algoritma, kullanıcı yönetimi
+- **Sevim Akdeniz** — *Full Stack Developer & Proje Lideri*  
+  Görev: Backend geliştirme, algoritma tasarımı, kullanıcı yönetimi
 
-**Nehir Karabulut**
-Frontend Developer
-Görev: Arayüz tasarımı, responsive yapı
+- **Nehir Karabulut** — *Frontend Developer*  
+  Görev: Arayüz tasarımı, responsive yapı
 
-**Zeynep Arda Yıldız**
-Veritabanı Uzmanı
-Görev: MySQL şeması ve veri ilişkileri
+- **Zeynep Arda Yıldız** — *Veritabanı Uzmanı*  
+  Görev: MySQL şema tasarımı ve veri ilişkileri yönetimi
+
+## 👤 Geliştirici
+
+**Sevim Akdeniz**  
+Full Stack Developer  
+[GitHub Profilim](https://github.com/SevimAkdeniz)
 
 ---
 
-Bu proje, otel rezervasyon sistemi üzerine kişisel bir geliştirme çalışmasıdır.
+Bu proje, otel rezervasyon sistemi üzerine ekip çalışması olarak geliştirilmiştir.
